@@ -1,0 +1,1 @@
+This simulator is based on a C# translated version of my [ProcedurallyGeneratedAnimals](https://github.com/VarazsGoreny04/ProcedurallyGeneratedAnimals) JavaScript library. The project is divided into smaller parts (core library, backend and frontend), making it easily extensible to various platforms that support C# (such as WPF for desktop environments or Blazor for browsers). 
