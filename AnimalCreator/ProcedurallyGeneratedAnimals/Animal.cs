@@ -1,15 +1,18 @@
-﻿namespace ProcedurallyGeneratedAnimals;
+﻿using System;
+using System.Collections.Generic;
+
+namespace ProcedurallyGeneratedAnimals;
 
 /// <summary>
 /// Describes an animal.
 /// </summary>
-public class Animal
+public sealed class Animal
 {
-	protected Segment headSegment;
-	protected Color bodyColor;
-	protected int speed;
+	private Segment headSegment;
+	private Color bodyColor;
+	private int speed;
 
-	public Segment HeadSegment => headSegment;
+	internal Segment HeadSegment => headSegment;
 	public Color BodyColor => bodyColor;
 	public int Speed => speed;
 
@@ -23,7 +26,7 @@ public class Animal
 	/// <param name="descriptors">The descriptors of the body of the animal.</param>
 	/// <param name="bodyColor">The color of the animals body.</param>
 	/// <param name="speed">The speed of the animal.</param>
-	public Animal(Point headPosition, SegmentDescriptor[] descriptors, Color bodyColor, int speed)
+	public Animal(Point<int> headPosition, SegmentDescriptor[] descriptors, Color bodyColor, int speed)
 	{
 		if (descriptors.Length < 2)
 			throw new ArgumentException("An animal must have at least 2 segments!", nameof(descriptors));
@@ -34,22 +37,22 @@ public class Animal
 		this.speed = speed;
 	}
 
-	internal static void OnDrawEllipse(Point dimensions, Transform[] transforms)
+	internal static void OnDrawEllipse(Point<int> dimensions, Transform[] transforms)
 	{
 		DrawEllipse?.Invoke(null, new EllipseEventArgs(dimensions, transforms));
 	}
 
-	internal static void OnDrawEllipse(Point dimensions, Transform[] transforms, Color color)
+	internal static void OnDrawEllipse(Point<int> dimensions, Transform[] transforms, Color color)
 	{
 		DrawEllipse?.Invoke(null, new EllipseEventArgs(dimensions, transforms, color));
 	}
 
-	internal static void OnDrawBezierLine(Point[] points, Transform[] transforms)
+	internal static void OnDrawBezierLine(Point<double>[] points, Transform[] transforms)
 	{
 		DrawBezierLine?.Invoke(null, new BezierLineEventArgs(points, transforms));
 	}
 
-	internal static void OnDrawBezierLine(Point[] points, Transform[] transforms, Color color)
+	internal static void OnDrawBezierLine(Point<double>[] points, Transform[] transforms, Color color)
 	{
 		DrawBezierLine?.Invoke(null, new BezierLineEventArgs(points, transforms, color));
 	}
@@ -60,7 +63,7 @@ public class Animal
 	/// <param name="animal">The animal.</param>
 	public static void DrawSpine(Animal animal)
 	{
-		List<Point> points = [];
+		List<Point<double>> points = [];
 		foreach (Segment segment in animal.headSegment)
 			points.Add(segment.Origin);
 
@@ -74,7 +77,7 @@ public class Animal
 	public static void DrawCircles(Animal animal)
 	{
 		foreach (Segment segment in animal.headSegment)
-			OnDrawEllipse(new Point(segment.SkinRadius, segment.SkinRadius), [new Translate(segment.Origin)]);
+			OnDrawEllipse(new Point<int>(segment.SkinRadius, segment.SkinRadius), [new Translate(segment.Origin)]);
 	}
 
 	/// <summary>
@@ -103,16 +106,17 @@ public class Animal
 	/// Moves this animal instance to the given direction.
 	/// </summary>
 	/// <param name="destination">The given direction.</param>
-	public void Step(Point destination)
+	public void Step(Point<int> destination)
 	{
-		Point vectorToDestination = Point.Subtract(destination, headSegment.Origin);
+		Point<double> vectorToDestination = Point.Subtract(Point.IntToDouble(destination), headSegment.Origin);
 
 		if (Point.Magnitude(vectorToDestination) < speed)
 			return;
 
-		Point direction = Point.Scale(vectorToDestination, speed);
+		Point<double> direction = Point.Scale(vectorToDestination, speed);
 
-		Point restrictedDirection = headSegment.NextSegment is not null ? Segment.RestrictAngleOfRotation(headSegment, headSegment.NextSegment, direction) : direction;
+		Point<double> restrictedDirection = headSegment.NextSegment is not null ?
+			Segment.RestrictAngleOfRotation(headSegment, headSegment.NextSegment, direction) : direction;
 
 		headSegment.Origin = Point.Add(headSegment.Origin, restrictedDirection);
 		Segment.PullNext(headSegment);

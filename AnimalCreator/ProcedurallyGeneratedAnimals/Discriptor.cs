@@ -1,4 +1,6 @@
-﻿namespace ProcedurallyGeneratedAnimals;
+﻿using System;
+
+namespace ProcedurallyGeneratedAnimals;
 
 /// <summary>
 /// Describes an animal.
@@ -9,8 +11,13 @@ public class AnimalDescriptor
 	protected Color color;
 	protected int speed;
 
+	/// <returns>The segments of the animal.</returns>
 	public SegmentDescriptor[] SegmentDescriptors => segmentDescriptors;
+
+	/// <returns>The color of the body.</returns>
 	public Color Color => color;
+
+	/// <returns>The speed of the animal.</returns>
 	public int Speed => speed;
 
 	/// <summary>
@@ -30,7 +37,7 @@ public class AnimalDescriptor
 	/// Creates an <see cref="Animal"/> object by this descriptor.
 	/// </summary>
 	/// <returns>The <see cref="Animal"/> object.</returns>
-	public Animal Create(Point headPosition) => new(headPosition, segmentDescriptors, color, speed);
+	public Animal Create(Point<int> headPosition) => new(headPosition, segmentDescriptors, color, speed);
 }
 
 /// <summary>
@@ -42,8 +49,13 @@ public class SegmentDescriptor
 	protected int skinRadius;
 	protected BodyPartDescriptor[] bodyPartDescriptors;
 
+	/// <returns>The distance form the previous segment.</returns>
 	public int SegmentDistance => segmentDistance;
+
+	/// <returns>The radius of the skin at the segment.</returns>
 	public int SkinRadius => skinRadius;
+
+	/// <returns>The bodyParts of the segment.</returns>
 	public BodyPartDescriptor[] BodyPartDescriptors => bodyPartDescriptors;
 
 	/// <summary>
@@ -71,10 +83,10 @@ public class SegmentDescriptor
 	/// </summary>
 	/// <param name="prevOrigin">The origin of the previous segment.</param>
 	/// <returns>The Segment object.</returns>
-	public virtual Segment Create(Point prevOrigin)
+	internal virtual Segment Create(Point<double> prevOrigin)
 	{
 		Segment segment = new(
-			new Point(prevOrigin.X - segmentDistance, prevOrigin.Y),
+			new Point<double>(prevOrigin.X - segmentDistance, prevOrigin.Y),
 			Math.Abs(segmentDistance),
 			skinRadius,
 			new BodyPart[bodyPartDescriptors.Length]
@@ -95,7 +107,10 @@ public class AngledSegmentDescriptor : SegmentDescriptor
 	protected double minAngle;
 	protected double maxAngle;
 
+	/// <returns>The minimum angle of the joint.</returns>
 	public double MinAngle => minAngle;
+
+	/// <returns>The maximum angle of the joint.</returns>
 	public double MaxAngle => maxAngle;
 
 	/// <summary>
@@ -146,14 +161,14 @@ public class AngledSegmentDescriptor : SegmentDescriptor
 		: this(segmentDistance, skinRadius, -angle, angle, []) { }
 
 	/// <summary>
-	/// Creates a Segment object by this descriptor.
+	/// Creates a <see cref="Segment"/> object by this descriptor.
 	/// </summary>
 	/// <param name="prevOrigin">The origin of the previous segment.</param>
-	/// <returns>The Segment object.</returns>
-	public override Segment Create(Point prevOrigin)
+	/// <returns>The <see cref="Segment"/> object.</returns>
+	internal override Segment Create(Point<double> prevOrigin)
 	{
 		Segment segment = new(
-			new Point(prevOrigin.X, prevOrigin.Y - segmentDistance),
+			new Point<double>(prevOrigin.X, prevOrigin.Y - segmentDistance),
 			Math.Abs(segmentDistance),
 			skinRadius,
 			new BodyPart[bodyPartDescriptors.Length],
@@ -176,7 +191,10 @@ public abstract class BodyPartDescriptor
 	protected Render render;
 	protected Color color;
 
+	/// <returns>Where to render.</returns>
 	public Render Render => render;
+
+	/// <returns>The color of the bodyPart.</returns>
 	public Color Color => color;
 
 	/// <summary>
@@ -191,11 +209,11 @@ public abstract class BodyPartDescriptor
 	}
 
 	/// <summary>
-	/// Creates a BodyPart object by this descriptor.
+	/// Creates a <see cref="BodyPart"/> object by this descriptor.
 	/// </summary>
 	/// <param name="segment">The parent segment.</param>
-	/// <returns>The BodyPart object.</returns>
-	public abstract BodyPart Create(Segment segment);
+	/// <returns>The <see cref="BodyPart"/> object.</returns>
+	internal abstract BodyPart Create(Segment segment);
 }
 
 /// <summary>
@@ -207,9 +225,14 @@ public class EyeDescriptor : BodyPartDescriptor
 	protected int distanceToOrigin;
 	protected int radius;
 
-	protected double DegreeToFront => degreeToFront;
-	protected int DistanceToOrigin => distanceToOrigin;
-	protected int Radius => radius;
+	/// <returns>The angle to push the eye from the center of the segment.</returns>
+	public double DegreeToFront => degreeToFront;
+
+	/// <returns>The distance to push the eye from the center of the segment.</returns>
+	public int DistanceToOrigin => distanceToOrigin;
+
+	/// <returns>The radius of the eye.</returns>
+	public int Radius => radius;
 
 	/// <summary>
 	/// Creates an EyeDescriptor object.
@@ -227,11 +250,11 @@ public class EyeDescriptor : BodyPartDescriptor
 	}
 
 	/// <summary>
-	/// Creates an Eye object by this descriptor.
+	/// Creates an <see cref="Eye"/> object by this descriptor.
 	/// </summary>
 	/// <param name="segment">The parent segment.</param>
-	/// <returns>The Eye object.</returns>
-	public override BodyPart Create(Segment segment) => new Eye(segment, render, degreeToFront, distanceToOrigin, radius, color);
+	/// <returns>The <see cref="Eye"/> object.</returns>
+	internal override BodyPart Create(Segment segment) => new Eye(segment, render, degreeToFront, distanceToOrigin, radius, color);
 }
 
 /// <summary>
@@ -243,9 +266,14 @@ public class SideFinDescriptor : BodyPartDescriptor
 	protected int width;
 	protected double angle;
 
-	protected int Length => length;
-	protected int Width => width;
-	protected double Angle => angle;
+	/// <returns>The length of the fin.</returns>
+	public int Length => length;
+
+	/// <returns>The width of the fin.</returns>
+	public int Width => width;
+
+	/// <returns>The angle of the fin.</returns>
+	public double Angle => angle;
 
 	/// <summary>
 	/// Creates a SideFinDescriptor object.
@@ -263,11 +291,11 @@ public class SideFinDescriptor : BodyPartDescriptor
 	}
 
 	/// <summary>
-	/// Creates a SideFin object by this descriptor.
+	/// Creates a <see cref="SideFin"/> object by this descriptor.
 	/// </summary>
 	/// <param name="segment">The parent segment.</param>
-	/// <returns>The SideFin object.</returns>
-	public override BodyPart Create(Segment segment) => new SideFin(segment, render, length, width, angle, color);
+	/// <returns>The <see cref="SideFin"/> object.</returns>
+	internal override BodyPart Create(Segment segment) => new SideFin(segment, render, length, width, angle, color);
 }
 
 /// <summary>
@@ -277,6 +305,7 @@ public class BackFinDescriptor : BodyPartDescriptor
 {
 	protected int lengthInSegments;
 
+	/// <returns>The number of segments the fin will go through.</returns>
 	public int LengthInSegments => lengthInSegments;
 
 	/// <summary>
@@ -287,11 +316,11 @@ public class BackFinDescriptor : BodyPartDescriptor
 	public BackFinDescriptor(int lengthInSegments, Color color, Render render = Render.Top) : base(render, color) => this.lengthInSegments = lengthInSegments;
 
 	/// <summary>
-	/// Creates a BackFin object by this descriptor.
+	/// Creates a <see cref="BackFin"/> object by this descriptor.
 	/// </summary>
 	/// <param name="segment">The parent segment.</param>
-	/// <returns>The BackFin object.</returns>
-	public override BodyPart Create(Segment segment) => new BackFin(segment, render, lengthInSegments, color);
+	/// <returns>The <see cref="BackFin"/> object.</returns>
+	internal override BodyPart Create(Segment segment) => new BackFin(segment, render, lengthInSegments, color);
 }
 
 /// <summary>
@@ -301,6 +330,7 @@ public class TailFinDescriptor : BodyPartDescriptor
 {
 	protected int[] segmentDistances;
 
+	/// <returns>The distances of the segments of the fin.</returns>
 	public int[] SegmentDistances => segmentDistances;
 
 	/// <summary>
@@ -312,11 +342,11 @@ public class TailFinDescriptor : BodyPartDescriptor
 	public TailFinDescriptor(int[] segmentDistances, Color color, Render render = Render.Bottom) : base(render, color) => this.segmentDistances = segmentDistances;
 
 	/// <summary>
-	/// Creates a TailFin object by this descriptor.
+	/// Creates a <see cref="TailFin"/> object by this descriptor.
 	/// </summary>
 	/// <param name="segment">The parent segment.</param>
-	/// <returns>The TailFin object.</returns>
-	public override BodyPart Create(Segment segment) => new TailFin(segment, render, segmentDistances, color);
+	/// <returns>The <see cref="TailFin"/> object.</returns>
+	internal override BodyPart Create(Segment segment) => new TailFin(segment, render, segmentDistances, color);
 }
 
 /// <summary>
@@ -327,7 +357,10 @@ public class AntennaDescriptor : BodyPartDescriptor
 	protected AntennaSegmentDescriptor[] segmentDescriptors;
 	protected double angle;
 
+	/// <returns>The segments of the antenna.</returns>
 	public AntennaSegmentDescriptor[] SegmentDescriptors => segmentDescriptors;
+
+	/// <returns>The angle to push the eye from the center of the segment.</returns>
 	public double Angle => angle;
 
 	/// <summary>
@@ -344,11 +377,11 @@ public class AntennaDescriptor : BodyPartDescriptor
 	}
 
 	/// <summary>
-	/// Creates an Antenna object by this descriptor.
+	/// Creates an <see cref="Antenna"/> object by this descriptor.
 	/// </summary>
 	/// <param name="segment">The parent segment.</param>
-	/// <returns>The Antenna object.</returns>
-	public override BodyPart Create(Segment segment) => new Antenna(segment, render, segmentDescriptors, angle, color);
+	/// <returns>The <see cref="Antenna"/> object.</returns>
+	internal override BodyPart Create(Segment segment) => new Antenna(segment, render, segmentDescriptors, angle, color);
 }
 
 /// <summary>
@@ -358,6 +391,7 @@ public class AntennaSegmentDescriptor : SegmentDescriptor
 {
 	protected double angle;
 
+	/// <returns>The angle of the segment from the previous one.</returns>
 	public double Angle => angle;
 
 	/// <summary>
@@ -369,14 +403,14 @@ public class AntennaSegmentDescriptor : SegmentDescriptor
 	public AntennaSegmentDescriptor(int segmentDistance, int skinRadius, double angle) : base(segmentDistance, skinRadius) => this.angle = angle;
 
 	/// <summary>
-	/// Creates a Segment object by this descriptor.
+	/// Creates a <see cref="Segment"/> object by this descriptor.
 	/// </summary>
 	/// <param name="prevOrigin">The origin of the previous segment.</param>
-	/// <returns>The Segment object.</returns>
-	public override Segment Create(Point prevOrigin)
+	/// <returns>The <see cref="Segment"/> object.</returns>
+	internal override Segment Create(Point<double> prevOrigin)
 	{
 		return new Segment(
-			Point.RotateDegree(new Point(prevOrigin.X - segmentDistance, prevOrigin.Y), angle),
+			Point.RotateDegree(new Point<double>(prevOrigin.X - segmentDistance, prevOrigin.Y), angle),
 			segmentDistance,
 			skinRadius,
 			[]
@@ -390,10 +424,13 @@ public class AntennaSegmentDescriptor : SegmentDescriptor
 public class LegDescriptor : BodyPartDescriptor
 {
 	protected LegSegmentDescriptor[] segmentDescriptors;
-	protected Point stepTo;
+	protected Point<int> stepTo;
 
+	/// <returns>The segments of the leg.</returns>
 	public LegSegmentDescriptor[] SegmentDescriptors => segmentDescriptors;
-	public Point StepTo => stepTo;
+
+	/// <returns>The position to step to.</returns>
+	public Point<int> StepTo => stepTo;
 
 	/// <summary>
 	/// Creates a LegDescriptor object.
@@ -402,18 +439,18 @@ public class LegDescriptor : BodyPartDescriptor
 	/// <param name="stepTo">The position to step to.</param>
 	/// <param name="color">The color of the leg.</param>
 	/// <param name="render">Where to render.</param>
-	public LegDescriptor(LegSegmentDescriptor[] legSegmentDescriptors, Point stepTo, Color color, Render render = Render.Bottom) : base(render, color)
+	public LegDescriptor(LegSegmentDescriptor[] legSegmentDescriptors, Point<int> stepTo, Color color, Render render = Render.Bottom) : base(render, color)
 	{
 		segmentDescriptors = legSegmentDescriptors;
 		this.stepTo = stepTo;
 	}
 
 	/// <summary>
-	/// Creates a Leg object by this descriptor.
+	/// Creates a <see cref="Leg"/> object by this descriptor.
 	/// </summary>
 	/// <param name="segment">The parent segment.</param>
-	/// <returns>The Leg object.</returns>
-	public override BodyPart Create(Segment segment) => new Leg(segment, render, segmentDescriptors, stepTo, color);
+	/// <returns>The <see cref="Leg"/> object.</returns>
+	internal override BodyPart Create(Segment segment) => new Leg(segment, render, segmentDescriptors, stepTo, color);
 }
 
 /// <summary>
@@ -443,11 +480,11 @@ public class LegSegmentDescriptor : AngledSegmentDescriptor
 		: this(segmentDistance, skinRadius, minAngle, maxAngle, []) { }
 
 	/// <summary>
-	/// Mirrors the position one LegSegmentDescriptor.
+	/// Mirrors the position one <see cref="LegSegmentDescriptor"/>.
 	/// </summary>
-	/// <param name="descriptor">The LegSegmentDescriptor to mirror.</param>
-	/// <returns>A new LegSegmentDescriptor object with mirrored coordinates.</returns>
-	public static LegSegmentDescriptor Mirror(LegSegmentDescriptor descriptor)
+	/// <param name="descriptor">The <see cref="LegSegmentDescriptor"/> to mirror.</param>
+	/// <returns>A new <see cref="LegSegmentDescriptor"/> object with mirrored coordinates.</returns>
+	internal static LegSegmentDescriptor Mirror(LegSegmentDescriptor descriptor)
 	{
 		return new LegSegmentDescriptor(
 			-descriptor.segmentDistance,

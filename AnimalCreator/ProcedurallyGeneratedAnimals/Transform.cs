@@ -12,6 +12,7 @@ public sealed class Rotate : Transform
 {
 	private readonly double angle;
 
+	/// <returns>The angle of the rotation.</returns>
 	public double Angle => angle;
 
 	/// <summary>
@@ -26,15 +27,16 @@ public sealed class Rotate : Transform
 /// </summary>
 public sealed class Scale : Transform
 {
-	private readonly Point value;
+	private readonly Point<double> value;
 
-	public Point Value => value;
+	/// <returns>The X and Y values of the scaling.</returns>
+	public Point<double> Value => value;
 
 	/// <summary>
 	/// Creates a <see cref="Translate"/> object.
 	/// </summary>
-	/// <param name="value">The value of the scaling.</param>
-	public Scale(Point value) => this.value = value;
+	/// <param name="value">The X and Y values of the scaling.</param>
+	public Scale(Point<double> value) => this.value = value;
 }
 
 /// <summary>
@@ -42,13 +44,14 @@ public sealed class Scale : Transform
 /// </summary>
 public sealed class Translate : Transform
 {
-	private readonly Point value;
+	private readonly Point<double> value;
 
-	public Point Value => value;
+	/// <returns>The X and Y values of the translation.</returns>
+	public Point<double> Value => value;
 
 	/// <summary>
 	/// Creates a <see cref="Translate"/> object.
 	/// </summary>
-	/// <param name="value">The value of the transformation.</param>
-	public Translate(Point value) => this.value = value;
+	/// <param name="value">The X and Y values of the transformation.</param>
+	public Translate(Point<double> value) => this.value = value;
 }

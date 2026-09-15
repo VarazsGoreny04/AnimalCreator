@@ -1,9 +1,12 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.37628.2
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcedurallyGeneratedAnimals", "ProcedurallyGeneratedAnimals\ProcedurallyGeneratedAnimals.csproj", "{93E06B73-ED77-46CB-9822-333E0C63CE72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimalCreator.WPF", "AnimalCreator.WPF\AnimalCreator.WPF.csproj", "{05A1F0E2-C124-4150-850B-829488E3B7BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimalCreator", "AnimalCreator\AnimalCreator.csproj", "{3920850A-610F-430B-B083-FAC10A5D9E9E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

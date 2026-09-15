@@ -1,11 +1,14 @@
-﻿namespace ProcedurallyGeneratedAnimals;
+﻿using System;
+using System.Collections.Generic;
+
+namespace ProcedurallyGeneratedAnimals;
 
 /// <summary>
 /// Describes a segment of a creature.
 /// </summary>
-public class Segment
+internal class Segment
 {
-	protected Point origin;
+	protected Point<double> origin;
 	protected int distanceFromPrev;
 	protected int skinRadius;
 	protected double maxAngle;
@@ -14,13 +17,30 @@ public class Segment
 	protected Segment? prevSegment;
 	protected Segment? nextSegment;
 
-	public Point Origin { get => origin; set => origin = value; }
+	/// <summary>
+	/// Gets and sets the position of the segment.
+	/// </summary>
+	public Point<double> Origin { get => origin; set => origin = value; }
+
+	/// <returns>The distance of this segment from the previous one.</returns>
 	public int DistanceFromPrev => distanceFromPrev;
+
+	/// <returns>The width of the creature at this segment.</returns>
 	public int SkinRadius => skinRadius;
+
+	/// <returns>The minimum angle of rotation at this segment.</returns>
 	public double MaxAngle => maxAngle;
+
+	/// <returns>The minimum angle of rotation at this segment.</returns>
 	public double MinAngle => minAngle;
+
+	/// <returns>The additional bodyParts.</returns>
 	public BodyPart[] BodyParts => bodyParts;
+
+	/// <returns>The previous segment.</returns>
 	public Segment? PrevSegment => prevSegment;
+
+	/// <returns>The next segment.</returns>
 	public Segment? NextSegment => nextSegment;
 
 	/// <summary>
@@ -30,7 +50,9 @@ public class Segment
 	/// <param name="distanceFromPrev">The distance of this segment from the previous one.</param>
 	/// <param name="skinRadius">The width of the creature at this segment.</param>
 	/// <param name="bodyParts">The additional bodyParts.</param>
-	public Segment(Point origin, int distanceFromPrev, int skinRadius, BodyPart[] bodyParts, double minAngle, double maxAngle)
+	/// <param name="minAngle">The minimum angle of rotation at this segment.</param>
+	/// <param name="maxAngle">The maximum angle of rotation at this segment.</param>
+	public Segment(Point<double> origin, int distanceFromPrev, int skinRadius, BodyPart[] bodyParts, double minAngle, double maxAngle)
 	{
 		this.origin = origin;
 		this.distanceFromPrev = distanceFromPrev;
@@ -53,15 +75,56 @@ public class Segment
 	/// <param name="distanceFromPrev">The distance of this segment from the previous one.</param>
 	/// <param name="skinRadius">The width of the creature at this segment.</param>
 	/// <param name="bodyParts">The additional bodyParts.</param>
-	public Segment(Point origin, int distanceFromPrev, int skinRadius, BodyPart[] bodyParts) : this(origin, distanceFromPrev, skinRadius, bodyParts, 0, 0)
+	public Segment(Point<double> origin, int distanceFromPrev, int skinRadius, BodyPart[] bodyParts) : this(origin, distanceFromPrev, skinRadius, bodyParts, 0, 0)
 	{
 		maxAngle = Math.Min(20 * this.distanceFromPrev / this.skinRadius, 60);
 		minAngle = -maxAngle;
 	}
 
 	/// <summary>
+	/// Creates the segments by the given descriptors and links them together.
+	/// </summary>
+	/// <param name="startingPoint">The starting position of the first segment.</param>
+	/// <param name="segmentDescriptors">The descriptors of the segments.</param>
+	/// <returns>The head segment of the linked list.</returns>
+	internal static Segment CreateAndLink(Point<double> startingPoint, SegmentDescriptor[] segmentDescriptors)
+	{
+		Segment result = segmentDescriptors[0].Create(startingPoint);
+
+		Segment prev = result;
+		Segment next;
+
+		int descriptorsLength = segmentDescriptors.Length;
+		for (int i = 1; i < descriptorsLength; ++i)
+		{
+			next = segmentDescriptors[i].Create(prev.Origin);
+
+			prev.nextSegment = next;
+			next.prevSegment = prev;
+
+			prev = next;
+		}
+
+		PullNext(result);
+
+		return result;
+	}
+
+	/// <summary>
+	/// Creates the segments by the given descriptors and links them together.
+	/// </summary>
+	/// <param name="startingPoint">The starting position of the first segment.</param>
+	/// <param name="segmentDescriptors">The descriptors of the segments.</param>
+	/// <returns>The head segment of the linked list.</returns>
+	public static Segment CreateAndLink(Point<int> startingPoint, SegmentDescriptor[] segmentDescriptors)
+	{
+		return CreateAndLink(Point.IntToDouble(startingPoint), segmentDescriptors);
+	}
+
+	/// <summary>
 	/// Iterates through the segments.
 	/// </summary>
+	/// <returns>The iterable sequence.</returns>
 	public IEnumerator<Segment> GetEnumerator()
 	{
 		Segment? current = this;
@@ -74,44 +137,16 @@ public class Segment
 	}
 
 	/// <summary>
-	/// Creates the segments by the given descriptors and links them together.
-	/// </summary>
-	/// <param name="startingPoint">The starting position of the first segment.</param>
-	/// <param name="segmentDescriptors">The descriptors of the segments.</param>
-	/// @returns The head segment of the linked list.
-	public static Segment CreateAndLink(Point startingPoint, SegmentDescriptor[] segmentDescriptors)
-	{
-		Segment result = segmentDescriptors[0].Create(startingPoint);
-
-		Segment current = result;
-		Segment next;
-
-		int descriptorsLength = segmentDescriptors.Length;
-		for (int i = 1; i < descriptorsLength; ++i)
-		{
-			next = segmentDescriptors[i].Create(current.origin);
-
-			current.nextSegment = next;
-			next.prevSegment = current;
-
-			current = next;
-		}
-
-		PullNext(result);
-
-		return result;
-	}
-
-	/// <summary>
 	/// Pulls the given neighbour segment towards this segment.
+	/// </summary>
 	/// <param name="segment">The segment to pull towards.</param>
 	/// <param name="segmentToPull">The segment to pull.</param>
 	/// <param name="distanceBetween">The needed distance in between the two segments.</param>
 	/// <param name="segmentInFront">The segment on the other side of the main segment.</param>
 	public static void Pull(Segment segment, Segment segmentToPull, int distanceBetween, Segment? segmentInFront = null)
 	{
-		Point fromSegmentToNext = Point.Subtract(segmentToPull.origin, segment.origin);
-		Point toJoinPoint = Point.Scale(fromSegmentToNext, distanceBetween);
+		Point<double> fromSegmentToNext = Point.Subtract(segmentToPull.origin, segment.origin);
+		Point<double> toJoinPoint = Point.Scale(fromSegmentToNext, distanceBetween);
 
 		if (segmentInFront is not null)
 			toJoinPoint = RestrictAngleOfRotation(segment, segmentInFront, toJoinPoint);
@@ -134,6 +169,7 @@ public class Segment
 
 	/// <summary>
 	/// Pulls the previous segment of the given segment.
+	/// </summary>
 	/// <param name="segment">The given segment.</param>
 	public static void PullPrev(Segment segment)
 	{
@@ -150,7 +186,7 @@ public class Segment
 	/// <param name="segment">The given segment.</param>
 	/// <exception cref="ArgumentException">If the segment has no neighbours.</exception>
 	/// <returns>The calculated vector.</returns>
-	public static Point GetFrontVector(Segment segment)
+	public static Point<double> GetFrontVector(Segment segment)
 	{
 		Segment? prev = segment.prevSegment;
 		Segment? next = segment.nextSegment;
@@ -161,26 +197,27 @@ public class Segment
 		prev ??= segment;
 		next ??= segment;
 
-		Point vector = Point.Subtract(prev.origin, next.origin);
+		Point<double> vector = Point.Subtract(prev.origin, next.origin);
 
 		return Point.Scale(vector, segment.skinRadius);
 	}
 
 	/// <summary>
 	/// Gets the outline points of the segment list.
+	/// </summary>
 	/// <param name="headSegment">The head segment.</param>
 	/// <returns>The outline points.</returns>
-	public static Point[] GetPoints(Segment headSegment)
+	public static Point<double>[] GetPoints(Segment headSegment)
 	{
 		double roundNoseAngle = double.DegreesToRadians(45);
 
-		Point frontVector = GetFrontVector(headSegment);
+		Point<double> frontVector = GetFrontVector(headSegment);
 
-		List<Point> left = [
+		List<Point<double>> left = [
 			Point.Add(headSegment.origin, frontVector),
 			Point.Add(headSegment.origin, Point.RotateRadian(frontVector, roundNoseAngle))
 		];
-		List<Point> right = [
+		List<Point<double>> right = [
 			Point.Add(headSegment.origin, Point.RotateRadian(frontVector, -roundNoseAngle))
 		];
 
@@ -188,7 +225,7 @@ public class Segment
 
 		foreach (Segment segment in headSegment)
 		{
-			Point front = GetFrontVector(segment);
+			Point<double> front = GetFrontVector(segment);
 
 			left.Add(Point.Add(segment.origin, Point.NormalLeft(front)));
 			right.Add(Point.Add(segment.origin, Point.NormalRight(front)));
@@ -196,7 +233,7 @@ public class Segment
 			tailSegment = segment;
 		}
 
-		Point backVector = Point.Reverse(GetFrontVector(tailSegment));
+		Point<double> backVector = Point.Reverse(GetFrontVector(tailSegment));
 
 		left.Add(Point.Add(tailSegment.origin, Point.RotateRadian(backVector, -roundNoseAngle)));
 		right.Add(Point.Add(tailSegment.origin, Point.RotateRadian(backVector, roundNoseAngle)));
@@ -230,9 +267,9 @@ public class Segment
 	/// <param name="secondSegment">The second segment.</param>
 	/// <param name="direction">The vector to restrict.</param>
 	/// <returns>The restricted vector.</returns>
-	public static Point RestrictAngleOfRotation(Segment firstSegment, Segment secondSegment, Point direction)
+	public static Point<double> RestrictAngleOfRotation(Segment firstSegment, Segment secondSegment, Point<double> direction)
 	{
-		Point fromSecondToFirst = Point.Subtract(firstSegment.origin, secondSegment.origin);
+		Point<double> fromSecondToFirst = Point.Subtract(firstSegment.origin, secondSegment.origin);
 
 		return Point.RestrictAngleOfRotation(fromSecondToFirst, direction, firstSegment.maxAngle, firstSegment.minAngle);
 	}

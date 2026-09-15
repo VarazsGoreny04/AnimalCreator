@@ -5,22 +5,29 @@
 /// </summary>
 public class Color
 {
-	private int r;
-	private int g;
-	private int b;
-	private int a;
+	private byte r;
+	private byte g;
+	private byte b;
+	private byte a;
 
-	public int R { get => r; set => r = value; }
-	public int G { get => g; set => g = value; }
-	public int B { get => b; set => b = value; }
-	public int A { get => a; set => a = value; }
+	/// <returns>The amount of red from 0 to 255.</returns>
+	public byte R { get => r; set => r = value; }
+
+	/// <returns>The amount of green from 0 to 255.</returns>
+	public byte G { get => g; set => g = value; }
+
+	/// <returns>The amount of blue from 0 to 255.</returns>
+	public byte B { get => b; set => b = value; }
+
+	/// <returns>The alpha value from 0 to 255.</returns>
+	public byte A { get => a; set => a = value; }
 
 	/// <summary>Creates a <see cref="Color"/> object.</summary>
 	/// <param name="r">The amount of red from 0 to 255.</param>
 	/// <param name="g">The amount of green from 0 to 255.</param>
 	/// <param name="b">The amount of blue from 0 to 255.</param>
 	/// <param name="a">The alpha value from 0 to 255.</param>
-	public Color(int r, int g, int b, int a = 255)
+	public Color(byte r, byte g, byte b, byte a = 255)
 	{
 		this.r = r;
 		this.g = g;
