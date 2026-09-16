@@ -12,15 +12,20 @@ public sealed class Animal
 	private Color bodyColor;
 	private int speed;
 
+	/// <returns>The head starting position.</returns>
 	internal Segment HeadSegment => headSegment;
+
+	/// <returns>The color of the animals body.</returns>
 	public Color BodyColor => bodyColor;
+
+	/// <returns>The speed of the animal.</returns>
 	public int Speed => speed;
 
 	public static event EventHandler<EllipseEventArgs>? DrawEllipse;
 	public static event EventHandler<BezierLineEventArgs>? DrawBezierLine;
 
 	/// <summary>
-	/// Creates an Animal object.
+	/// Creates an <see cref="Animal"/> object.
 	/// </summary>
 	/// <param name="headPosition">The head starting position.</param>
 	/// <param name="descriptors">The descriptors of the body of the animal.</param>
@@ -37,24 +42,46 @@ public sealed class Animal
 		this.speed = speed;
 	}
 
+	/// <summary>
+	/// Invokes the DrawEllipse event.
+	/// </summary>
+	/// <param name="dimensions">The dimensions of the ellipse.</param>
+	/// <param name="transforms">The transformations of the ellipse.</param>
 	internal static void OnDrawEllipse(Point<int> dimensions, Transform[] transforms)
 	{
 		DrawEllipse?.Invoke(null, new EllipseEventArgs(dimensions, transforms));
 	}
 
+	/// <summary>
+	/// Invokes the DrawEllipse event.
+	/// </summary>
+	/// <param name="dimensions">The dimensions of the ellipse.</param>
+	/// <param name="transforms">The transformations of the ellipse.</param>
+	/// <param name="color">The color of the ellipse.</param>
 	internal static void OnDrawEllipse(Point<int> dimensions, Transform[] transforms, Color color)
 	{
 		DrawEllipse?.Invoke(null, new EllipseEventArgs(dimensions, transforms, color));
 	}
 
-	internal static void OnDrawBezierLine(Point<double>[] points, Transform[] transforms)
+	/// <summary>
+	/// Invokes the DrawBezierLine event.
+	/// </summary>
+	/// <param name="points">The points of the line.</param>
+	/// <param name="transformations">The transformations of the line.</param>
+	internal static void OnDrawBezierLine(Point<double>[] points, Transform[] transformations)
 	{
-		DrawBezierLine?.Invoke(null, new BezierLineEventArgs(points, transforms));
+		DrawBezierLine?.Invoke(null, new BezierLineEventArgs(points, transformations));
 	}
 
-	internal static void OnDrawBezierLine(Point<double>[] points, Transform[] transforms, Color color)
+	/// <summary>
+	/// Invokes the DrawBezierLine event.
+	/// </summary>
+	/// <param name="points">The points of the line.</param>
+	/// <param name="transformations">The transformations of the line.</param>
+	/// <param name="color">The color of the line.</param>
+	internal static void OnDrawBezierLine(Point<double>[] points, Transform[] transformations, Color color)
 	{
-		DrawBezierLine?.Invoke(null, new BezierLineEventArgs(points, transforms, color));
+		DrawBezierLine?.Invoke(null, new BezierLineEventArgs(points, transformations, color));
 	}
 
 	/// <summary>

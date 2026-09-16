@@ -12,12 +12,17 @@ internal abstract class BodyPart
 	protected Render render;
 	protected Color color;
 
+	/// <returns>The parent segment.</returns>
 	public Segment Segment { get => segment; set => segment = value; }
+
+	/// <returns>Where to render.</returns>
 	public Render Render => render;
+
+	/// <returns>Color of the bodyPart.</returns>
 	public Color Color => color;
 
 	/// <summary>
-	/// Creates a BodyPart object.
+	/// Creates a <see cref="BodyPart"/> object.
 	/// </summary>
 	/// <param name="segment">The parent segment.</param>
 	/// <param name="render">Where to render.</param>
@@ -44,12 +49,17 @@ internal class Eye : BodyPart
 	protected int distanceToOrigin;
 	protected int radius;
 
+	/// <returns>The angle of the eye from the front vector of the segment.</returns>
 	public double RadianToFront => radianToFront;
+
+	/// <returns>The distance of the eye from the center of the segment.</returns>
 	public int DistanceToOrigin => distanceToOrigin;
+
+	/// <returns>Radius of the eye.</returns>
 	public int Radius => radius;
 
 	/// <summary>
-	/// Creates an Eye object.
+	/// Creates an <see cref="Eye"/> object.
 	/// </summary>
 	/// <param name="segment">The parent segment.</param>
 	/// <param name="render">Where to render.</param>
@@ -88,10 +98,24 @@ internal class SideFin : BodyPart
 	protected int width;
 	protected double angle;
 
+	/// <returns>The length of the fin.</returns>
 	public int Length => length;
+
+	/// <returns>The width of the fin.</returns>
 	public int Width => width;
+
+	/// <returns>The angle between the fin and the spine of the animal.</returns>
 	public double Angle => angle;
 
+	/// <summary>
+	/// Creates a <see cref="SideFin"/> object.
+	/// </summary>
+	/// <param name="segment">The parent segment.</param>
+	/// <param name="render">Where to render.</param>
+	/// <param name="length">The length of the fin.</param>
+	/// <param name="width">The width of the fin.</param>
+	/// <param name="angle">The angle between the fin and the spine of the animal.</param>
+	/// <param name="color">Color of the fin.</param>
 	public SideFin(Segment segment, Render render, int length, int width, double angle, Color color) : base(segment, render, color)
 	{
 		this.length = length;
@@ -134,10 +158,11 @@ internal class BackFin : BodyPart
 {
 	protected int lengthInSegments;
 
+	/// <returns>The number of segments the fin will go through.</returns>
 	public int LengthInSegments => lengthInSegments;
 
 	/// <summary>
-	/// Creates a BackFin object.
+	/// Creates a <see cref="BackFin"/> object.
 	/// </summary>
 	/// <param name="segment">The parent segment.</param>
 	/// <param name="render">Where to render.</param>
@@ -192,12 +217,13 @@ internal class BackFin : BodyPart
 /// </summary>
 internal class TailFin : BodyPart
 {
-	protected Segment headJoint;
+	protected Segment headSegment;
 
-	public Segment HeadJoint => headJoint;
+	/// <returns>The head segment of the fin.</returns>
+	public Segment HeadSegment => headSegment;
 
 	/// <summary>
-	/// Creates a TailFin object.
+	/// Creates a <see cref="TailFin"/> object.
 	/// </summary>
 	/// <param name="segment">The parent segment.</param>
 	/// <param name="render">Where to render.</param>
@@ -212,18 +238,19 @@ internal class TailFin : BodyPart
 		foreach (int distance in distances)
 			descriptors.Add(new SegmentDescriptor(distance, 1));
 
-		headJoint = Segment.CreateAndLink(Point.DoubleToInt(segment.Origin), [.. descriptors]);
+		headSegment = Segment.CreateAndLink(Point.DoubleToInt(segment.Origin), [.. descriptors]);
 	}
 
 	/// <summary>
 	/// Calculates the outline points of the fin.
+	/// </summary>
 	/// <param name="fin">The fin to calculate with.</param>
 	/// <returns>The calculated points.</returns>
 	public static Point<double>[] GetPoints(TailFin fin)
 	{
 		List<Point<double>> points = [];
 
-		foreach (Segment nextSegment in fin.headJoint)
+		foreach (Segment nextSegment in fin.headSegment)
 			points.Add(nextSegment.Origin);
 
 		double angle = Point.SinOfPoints(points[^3], points[^2], points[^1]);
@@ -243,8 +270,8 @@ internal class TailFin : BodyPart
 	/// </summary>
 	public override void Draw()
 	{
-		headJoint.Origin = segment.Origin;
-		Segment.PullNext(headJoint);
+		headSegment.Origin = segment.Origin;
+		Segment.PullNext(headSegment);
 
 		Animal.OnDrawBezierLine(GetPoints(this), [], color);
 	}
@@ -259,12 +286,17 @@ internal class Antenna : BodyPart
 	protected Point<double>[] pointsMirrored;
 	protected double angle;
 
+	/// <returns>The points of the antenna.</returns>
 	public Point<double>[] Points => points;
+
+	/// <returns>The points of the antenna mirrored.</returns>
 	public Point<double>[] PointsMirrored => pointsMirrored;
+
+	/// <returns>The angle between the antenna and the spine of the animal.</returns>
 	public double Angle => angle;
 
 	/// <summary>
-	/// Creates a TailFin object.
+	/// Creates a <see cref="TailFin"/> object.
 	/// </summary>
 	/// <param name="segment">The parent segment.</param>
 	/// <param name="render">Where to render.</param>
@@ -326,13 +358,22 @@ internal class Leg : BodyPart
 		protected Point<double> standsOn;
 		protected double range;
 
+		/// <returns>The head segment of the leg.</returns>
 		public Segment HeadSegment => headSegment;
+
+		/// <returns>The tail segment of the leg.</returns>
 		public Segment TailSegment => tailSegment;
+
+		/// <summary>
+		/// Gets or sets the point the leg stands on.
+		/// </summary>
 		public Point<double> StandsOn { get => standsOn; set => standsOn = value; }
+
+		/// <returns>The maximum distance between the head segment and the tail segment.</returns>
 		public double Range => range;
 
 		/// <summary>
-		/// Creates a OneLeg object.
+		/// Creates a <see cref="OneLeg"/> object.
 		/// </summary>
 		/// <param name="origin">The origin of the parent segment.</param>
 		/// <param name="descriptors">The descriptors of the segments of the leg.</param>
@@ -397,7 +438,7 @@ internal class Leg : BodyPart
 		}
 
 		/// <summary>
-		/// Draws a OneLeg instance.
+		/// Draws a leg instance.
 		/// </summary>
 		/// <param name="leg">The leg to draw.</param>
 		/// <param name="color">The color of the leg.</param>
@@ -430,7 +471,12 @@ internal class Leg : BodyPart
 	protected Point<double> stepTo;
 
 	/// <summary>
-	/// Creates a Leg object.
+	/// Gets or sets the point the leg stands on.
+	/// </summary>
+	public Point<double> StepTo { get => stepTo; set => stepTo = value; }
+
+	/// <summary>
+	/// Creates a <see cref="Leg"/> object.
 	/// </summary>
 	/// <param name="segment">The parent segment.</param>
 	/// <param name="render">Where to render.</param>
@@ -465,7 +511,7 @@ internal class Leg : BodyPart
 		leg.HeadSegment.Origin = Point.Add(segment.Origin, Point.Scale(normalVector, leg.HeadSegment.DistanceFromPrev));
 
 		double distanceFromTarget = Point.Distance(leg.StandsOn, leg.HeadSegment.Origin);
-		double bodyLegAngle = Math.Abs(Point.AngleOfVectors(frontVector, Point.Subtract(leg.HeadSegment.Origin, leg.HeadSegment.NextSegment.Origin)));
+		double bodyLegAngle = Math.Abs(Point.AngleOfVectors(frontVector, Point.Subtract(leg.HeadSegment.Origin, leg.HeadSegment.NextSegment!.Origin)));
 
 		if (distanceFromTarget > leg.Range || bodyLegAngle < 30)
 			leg.StandsOn = OneLeg.GetNewTarget(leg, frontVector, normalVector, stepTo);
