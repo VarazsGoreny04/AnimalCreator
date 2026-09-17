@@ -1,4 +1,6 @@
-﻿namespace ProcedurallyGeneratedAnimals;
+﻿using ProcedurallyGeneratedAnimals.Transformations;
+
+namespace ProcedurallyGeneratedAnimals.EventArgs;
 
 /// <summary>
 /// Describes parameters of a Bézier line.
@@ -6,14 +8,14 @@
 public class BezierLineEventArgs
 {
 	protected Point<double>[] points;
-	protected Transform[] transformations;
+	protected Transformation[] transformations;
 	protected Color color;
 
 	/// <returns>The points of the line.</returns>
 	public Point<double>[] Points => points;
 
 	/// <returns>The transformations of the line.</returns>
-	public Transform[] Transformations => transformations;
+	public Transformation[] Transformations => transformations;
 
 	/// <returns>The color of the line.</returns>
 	public Color Color => color;
@@ -24,7 +26,7 @@ public class BezierLineEventArgs
 	/// <param name="points">The points of the line.</param>
 	/// <param name="transformations">The transformations of the line.</param>
 	/// <param name="color">The color of the line.</param>
-	public BezierLineEventArgs(Point<double>[] points, Transform[] transformations, Color color)
+	public BezierLineEventArgs(Point<double>[] points, Transformation[] transformations, Color color)
 	{
 		this.points = points;
 		this.transformations = transformations;
@@ -36,5 +38,5 @@ public class BezierLineEventArgs
 	/// </summary>
 	/// <param name="points">The points of the line.</param>
 	/// <param name="transformations">The transformations of the line.</param>
-	public BezierLineEventArgs(Point<double>[] points, Transform[] transformations) : this(points, transformations, new Color(0, 0, 0, 0)) { }
+	public BezierLineEventArgs(Point<double>[] points, Transformation[] transformations) : this(points, transformations, new Color(0, 0, 0, 0)) { }
 }

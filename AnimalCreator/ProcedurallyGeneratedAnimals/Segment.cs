@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ProcedurallyGeneratedAnimals.BodyParts;
+using ProcedurallyGeneratedAnimals.Descriptors;
+using System;
 using System.Collections.Generic;
 
 namespace ProcedurallyGeneratedAnimals;

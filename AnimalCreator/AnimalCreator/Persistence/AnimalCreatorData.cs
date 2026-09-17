@@ -1,4 +1,5 @@
 ﻿using ProcedurallyGeneratedAnimals;
+using ProcedurallyGeneratedAnimals.Descriptors;
 using System;
 
 namespace AnimalCreator.Persistence;

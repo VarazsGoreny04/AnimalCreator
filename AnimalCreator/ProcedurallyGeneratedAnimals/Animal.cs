@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ProcedurallyGeneratedAnimals.Descriptors;
+using ProcedurallyGeneratedAnimals.EventArgs;
+using ProcedurallyGeneratedAnimals.Transformations;
+using System;
 using System.Collections.Generic;
 
 namespace ProcedurallyGeneratedAnimals;
@@ -47,7 +50,7 @@ public sealed class Animal
 	/// </summary>
 	/// <param name="dimensions">The dimensions of the ellipse.</param>
 	/// <param name="transforms">The transformations of the ellipse.</param>
-	internal static void OnDrawEllipse(Point<int> dimensions, Transform[] transforms)
+	internal static void OnDrawEllipse(Point<int> dimensions, Transformation[] transforms)
 	{
 		DrawEllipse?.Invoke(null, new EllipseEventArgs(dimensions, transforms));
 	}
@@ -58,7 +61,7 @@ public sealed class Animal
 	/// <param name="dimensions">The dimensions of the ellipse.</param>
 	/// <param name="transforms">The transformations of the ellipse.</param>
 	/// <param name="color">The color of the ellipse.</param>
-	internal static void OnDrawEllipse(Point<int> dimensions, Transform[] transforms, Color color)
+	internal static void OnDrawEllipse(Point<int> dimensions, Transformation[] transforms, Color color)
 	{
 		DrawEllipse?.Invoke(null, new EllipseEventArgs(dimensions, transforms, color));
 	}
@@ -68,7 +71,7 @@ public sealed class Animal
 	/// </summary>
 	/// <param name="points">The points of the line.</param>
 	/// <param name="transformations">The transformations of the line.</param>
-	internal static void OnDrawBezierLine(Point<double>[] points, Transform[] transformations)
+	internal static void OnDrawBezierLine(Point<double>[] points, Transformation[] transformations)
 	{
 		DrawBezierLine?.Invoke(null, new BezierLineEventArgs(points, transformations));
 	}
@@ -79,7 +82,7 @@ public sealed class Animal
 	/// <param name="points">The points of the line.</param>
 	/// <param name="transformations">The transformations of the line.</param>
 	/// <param name="color">The color of the line.</param>
-	internal static void OnDrawBezierLine(Point<double>[] points, Transform[] transformations, Color color)
+	internal static void OnDrawBezierLine(Point<double>[] points, Transformation[] transformations, Color color)
 	{
 		DrawBezierLine?.Invoke(null, new BezierLineEventArgs(points, transformations, color));
 	}
