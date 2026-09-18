@@ -1,6 +1,5 @@
 ﻿using ProcedurallyGeneratedAnimals.Descriptors;
 using ProcedurallyGeneratedAnimals.EventArgs;
-using ProcedurallyGeneratedAnimals.Transformations;
 using System;
 using System.Collections.Generic;
 
@@ -15,8 +14,8 @@ public sealed class Animal
 	private Color bodyColor;
 	private int speed;
 
-	/// <returns>The head starting position.</returns>
-	internal Segment HeadSegment => headSegment;
+	/// <returns>The head position.</returns>
+	public Point<double> HeadPosition => headSegment.Origin;
 
 	/// <returns>The color of the animals body.</returns>
 	public Color BodyColor => bodyColor;
@@ -49,42 +48,24 @@ public sealed class Animal
 	/// Invokes the DrawEllipse event.
 	/// </summary>
 	/// <param name="dimensions">The dimensions of the ellipse.</param>
-	/// <param name="transforms">The transformations of the ellipse.</param>
-	internal static void OnDrawEllipse(Point<int> dimensions, Transformation[] transforms)
-	{
-		DrawEllipse?.Invoke(null, new EllipseEventArgs(dimensions, transforms));
-	}
-
-	/// <summary>
-	/// Invokes the DrawEllipse event.
-	/// </summary>
-	/// <param name="dimensions">The dimensions of the ellipse.</param>
-	/// <param name="transforms">The transformations of the ellipse.</param>
+	/// <param name="position">The position of the ellipse.</param>
+	/// <param name="angle">The angle of the ellipse.</param>
 	/// <param name="color">The color of the ellipse.</param>
-	internal static void OnDrawEllipse(Point<int> dimensions, Transformation[] transforms, Color color)
+	internal static void OnDrawEllipse(Point<int> dimensions, Point<double> position, double? angle = null, Color? color = null)
 	{
-		DrawEllipse?.Invoke(null, new EllipseEventArgs(dimensions, transforms, color));
+		DrawEllipse?.Invoke(null, new EllipseEventArgs(dimensions, position, angle, color));
 	}
 
 	/// <summary>
 	/// Invokes the DrawBezierLine event.
 	/// </summary>
 	/// <param name="points">The points of the line.</param>
-	/// <param name="transformations">The transformations of the line.</param>
-	internal static void OnDrawBezierLine(Point<double>[] points, Transformation[] transformations)
-	{
-		DrawBezierLine?.Invoke(null, new BezierLineEventArgs(points, transformations));
-	}
-
-	/// <summary>
-	/// Invokes the DrawBezierLine event.
-	/// </summary>
-	/// <param name="points">The points of the line.</param>
-	/// <param name="transformations">The transformations of the line.</param>
+	/// <param name="position">The origin position of the line.</param>
+	/// <param name="angle">The angle of the line.</param>
 	/// <param name="color">The color of the line.</param>
-	internal static void OnDrawBezierLine(Point<double>[] points, Transformation[] transformations, Color color)
+	internal static void OnDrawBezierLine(Point<double>[] points, Point<double>? position = null, double? angle = null, Color? color = null)
 	{
-		DrawBezierLine?.Invoke(null, new BezierLineEventArgs(points, transformations, color));
+		DrawBezierLine?.Invoke(null, new BezierLineEventArgs(points, position, angle, color));
 	}
 
 	/// <summary>
@@ -97,7 +78,7 @@ public sealed class Animal
 		foreach (Segment segment in animal.headSegment)
 			points.Add(segment.Origin);
 
-		OnDrawBezierLine([.. points], []);
+		OnDrawBezierLine([.. points], new Point<double>(0, 0), 0);
 	}
 
 	/// <summary>
@@ -107,14 +88,14 @@ public sealed class Animal
 	public static void DrawCircles(Animal animal)
 	{
 		foreach (Segment segment in animal.headSegment)
-			OnDrawEllipse(new Point<int>(segment.SkinRadius, segment.SkinRadius), [new Translate(segment.Origin)]);
+			OnDrawEllipse(new Point<int>(segment.SkinRadius, segment.SkinRadius), segment.Origin, 0);
 	}
 
 	/// <summary>
 	/// Draws the outline of the animal.
 	/// </summary>
 	/// <param name="animal">The animal.</param>
-	public static void DrawOutline(Animal animal) => OnDrawBezierLine(Segment.GetPoints(animal.headSegment), [], animal.bodyColor);
+	public static void DrawOutline(Animal animal) => OnDrawBezierLine(Segment.GetPoints(animal.headSegment), null, null, animal.bodyColor);
 
 	/// <summary>
 	/// Draws this animal instance.
@@ -136,9 +117,9 @@ public sealed class Animal
 	/// Moves this animal instance to the given direction.
 	/// </summary>
 	/// <param name="destination">The given direction.</param>
-	public void Step(Point<int> destination)
+	public void Step(Point<double> destination)
 	{
-		Point<double> vectorToDestination = Point.Subtract(Point.IntToDouble(destination), headSegment.Origin);
+		Point<double> vectorToDestination = Point.Subtract(destination, headSegment.Origin);
 
 		if (Point.Magnitude(vectorToDestination) < speed)
 			return;

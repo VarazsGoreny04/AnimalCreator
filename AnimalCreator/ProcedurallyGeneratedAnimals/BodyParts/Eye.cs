@@ -42,9 +42,9 @@ internal class Eye : BodyPart
 		Point<double> frontScaled = Point.Scale(Segment.GetFrontVector(segment), distanceToOrigin);
 
 		Point<double> eyePoint = Point.Add(segment.Origin, Point.RotateRadian(frontScaled, radianToFront));
-		Animal.OnDrawEllipse(new Point<int>(radius, radius), [new Translate(eyePoint)], color);
+		Animal.OnDrawEllipse(new Point<int>(radius, radius), eyePoint, null, color);
 
 		Point<double> eyePointMirrored = Point.Add(segment.Origin, Point.RotateRadian(frontScaled, -radianToFront));
-		Animal.OnDrawEllipse(new Point<int>(radius, radius), [new Translate(eyePointMirrored)], color);
+		Animal.OnDrawEllipse(new Point<int>(radius, radius), eyePointMirrored, null, color);
 	}
 }

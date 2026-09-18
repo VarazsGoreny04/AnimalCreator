@@ -43,7 +43,7 @@ internal class SideFin : BodyPart
 	/// <param name="length">The height of the ellipse.</param>
 	public static void DrawEllipseByOrientation(Point<double> position, int width, int length, double angle, Color color)
 	{
-		Animal.OnDrawEllipse(new Point<int>(width, length / 2), [new Rotate(angle), new Translate(position)], color);
+		Animal.OnDrawEllipse(new Point<int>(width, length / 2), position, angle, color);
 	}
 
 	/// <summary>

@@ -54,7 +54,7 @@ internal class Segment
 	/// <param name="bodyParts">The additional bodyParts.</param>
 	/// <param name="minAngle">The minimum angle of rotation at this segment.</param>
 	/// <param name="maxAngle">The maximum angle of rotation at this segment.</param>
-	public Segment(Point<double> origin, int distanceFromPrev, int skinRadius, BodyPart[] bodyParts, double minAngle, double maxAngle)
+	public Segment(Point<double> origin, int distanceFromPrev, int skinRadius, BodyPartDescriptor[] bodyParts, double minAngle, double maxAngle)
 	{
 		this.origin = origin;
 		this.distanceFromPrev = distanceFromPrev;
@@ -62,9 +62,11 @@ internal class Segment
 		this.maxAngle = maxAngle;
 		this.minAngle = minAngle;
 
-		this.bodyParts = bodyParts;
-		foreach (BodyPart bodyPart in bodyParts)
-			bodyPart.Segment = this;
+		List<BodyPart> createdBodyParts = new(bodyParts.Length);
+		foreach (BodyPartDescriptor bodyPart in bodyParts)
+			createdBodyParts.Add(bodyPart.Create(this));
+
+		this.bodyParts = [.. createdBodyParts];
 
 		prevSegment = null;
 		nextSegment = null;
@@ -77,7 +79,8 @@ internal class Segment
 	/// <param name="distanceFromPrev">The distance of this segment from the previous one.</param>
 	/// <param name="skinRadius">The width of the creature at this segment.</param>
 	/// <param name="bodyParts">The additional bodyParts.</param>
-	public Segment(Point<double> origin, int distanceFromPrev, int skinRadius, BodyPart[] bodyParts) : this(origin, distanceFromPrev, skinRadius, bodyParts, 0, 0)
+	public Segment(Point<double> origin, int distanceFromPrev, int skinRadius, BodyPartDescriptor[] bodyParts)
+		: this(origin, distanceFromPrev, skinRadius, bodyParts, 0, 0)
 	{
 		maxAngle = Math.Min(20 * this.distanceFromPrev / this.skinRadius, 60);
 		minAngle = -maxAngle;

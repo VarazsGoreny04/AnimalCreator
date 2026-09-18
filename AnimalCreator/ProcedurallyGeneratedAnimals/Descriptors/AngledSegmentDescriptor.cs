@@ -71,18 +71,13 @@ public class AngledSegmentDescriptor : SegmentDescriptor
 	/// <returns>The <see cref="Segment"/> object.</returns>
 	internal override Segment Create(Point<double> prevOrigin)
 	{
-		Segment segment = new(
+		return new(
 			new Point<double>(prevOrigin.X, prevOrigin.Y - segmentDistance),
 			Math.Abs(segmentDistance),
 			skinRadius,
-			new BodyPart[bodyPartDescriptors.Length],
+			bodyPartDescriptors,
 			maxAngle,
 			minAngle
 		);
-
-		for (int i = bodyPartDescriptors.Length - 1; i >= 0; --i)
-			segment.BodyParts[i] = bodyPartDescriptors[i].Create(segment);
-
-		return segment;
 	}
 }

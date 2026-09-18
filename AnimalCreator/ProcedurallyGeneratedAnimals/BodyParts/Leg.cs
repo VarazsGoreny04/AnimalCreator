@@ -120,7 +120,7 @@ internal class Leg : BodyPart
 			foreach (Segment segment in leg.headSegment)
 				Segment.DrawBodyParts(segment, Render.Bottom);
 
-			Animal.OnDrawBezierLine(Segment.GetPoints(leg.headSegment), [], color);
+			Animal.OnDrawBezierLine(Segment.GetPoints(leg.headSegment), null, null, color);
 
 			foreach (Segment segment in leg.headSegment)
 				Segment.DrawBodyParts(segment, Render.Top);

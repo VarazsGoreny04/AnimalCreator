@@ -52,9 +52,9 @@ internal class Antenna : BodyPart
 	/// <param name="position">The position of the loop.</param>
 	/// <param name="angle">The angle of the loop.</param>
 	/// <param name="points">The points of the loop.</param>
-	public static void DrawLoopByOrientation(Point<double> position, Point<double>[] points, double angle, Color color)
+	public static void DrawLoopByOrientation(Point<double>[] points, Point<double>? position, double? angle, Color? color)
 	{
-		Animal.OnDrawBezierLine(points, [new Rotate(angle), new Translate(position)], color);
+		Animal.OnDrawBezierLine(points, position, angle, color);
 	}
 
 	/// <summary>
@@ -64,7 +64,7 @@ internal class Antenna : BodyPart
 	{
 		double bodyAngle = Point.AngleOfVector(Point.Reverse(Segment.GetFrontVector(segment)));
 
-		DrawLoopByOrientation(segment.Origin, points, bodyAngle + angle, color);
-		DrawLoopByOrientation(segment.Origin, pointsMirrored, bodyAngle - angle, color);
+		DrawLoopByOrientation(points, segment.Origin, bodyAngle + angle, color);
+		DrawLoopByOrientation(pointsMirrored, segment.Origin, bodyAngle - angle, color);
 	}
 }

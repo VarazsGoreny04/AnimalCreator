@@ -1,5 +1,4 @@
 ﻿using ProcedurallyGeneratedAnimals;
-using ProcedurallyGeneratedAnimals.Transformations;
 
 namespace AnimalCreator.Model.EventArgs;
 
@@ -12,14 +11,15 @@ public class BezierLineEventArgs : ProcedurallyGeneratedAnimals.EventArgs.Bezier
 	/// Creates an BezierLineEventArgs object.
 	/// </summary>
 	/// <param name="points">The points of the line.</param>
-	/// <param name="transformations">The transformations of the line.</param>
+	/// <param name="position">The origin position of the line.</param>
+	/// <param name="angle">The angle of the line.</param>
 	/// <param name="color">The color of the line.</param>
-	public BezierLineEventArgs(Point<double>[] points, Transformation[] transformations, Color color) : base(points, transformations, color) { }
+	public BezierLineEventArgs(Point<double>[] points, Point<double>? position, double? angle, Color? color) : base(points,	position, angle, color) { }
 
 	/// <summary>
 	/// Creates an BezierLineEventArgs object.
 	/// </summary>
-	/// <param name="points">The points of the line.</param>
-	/// <param name="transformations">The transformations of the line.</param>
-	public BezierLineEventArgs(Point<double>[] points, Transformation[] transformations) : this(points, transformations, new Color(0, 0, 0, 0)) { }
+	/// <param name="eventArgs">The <see cref="ProcedurallyGeneratedAnimals.EventArgs.BezierLineEventArgs"/> to copy values from.</param>
+	public BezierLineEventArgs(ProcedurallyGeneratedAnimals.EventArgs.BezierLineEventArgs eventArgs)
+		: this(eventArgs.Points, eventArgs.Position, eventArgs.Angle, eventArgs.Color) { }
 }

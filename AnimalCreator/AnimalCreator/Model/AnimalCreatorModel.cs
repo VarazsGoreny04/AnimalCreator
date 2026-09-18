@@ -1,10 +1,7 @@
 ﻿using AnimalCreator.Model.EventArgs;
 using AnimalCreator.Persistence;
-/*using ProcedurallyGeneratedAnimals;
-using ProcedurallyGeneratedAnimals.Transformations;*/
+using ProcedurallyGeneratedAnimals;
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace AnimalCreator.Model;
 
@@ -14,36 +11,43 @@ public sealed class AnimalCreatorModel
 
 	public AnimalCreatorData Data => data;
 
-	public static event EventHandler<EllipseEventArgs>? DrawEllipse;
-	public static event EventHandler<BezierLineEventArgs>? DrawBezierLine;
+	public event EventHandler<EllipseEventArgs>? DrawEllipse;
+	public event EventHandler<BezierLineEventArgs>? DrawBezierLine;
+	public event EventHandler? ClearCanvas;
 
-	public AnimalCreatorModel() => data = new AnimalCreatorData();
-
-	public void DrawLoop(CancellationTokenSource tokenSource)
+	public AnimalCreatorModel(int windowWidth, int windowHeight)
 	{
-		Task.Run(() =>
-		{
-			while (!tokenSource.IsCancellationRequested)
-			{
-				data.Animal.Draw();
+		data = new AnimalCreatorData(windowWidth, windowHeight);
 
-				Thread.Sleep(data.WaitTime);
-			}
-		}, tokenSource.Token);
+		Animal.DrawEllipse += new EventHandler<ProcedurallyGeneratedAnimals.EventArgs.EllipseEventArgs>((_, e) => OnDrawEllipse(e));
+		Animal.DrawBezierLine += new EventHandler<ProcedurallyGeneratedAnimals.EventArgs.BezierLineEventArgs>((_, e) => OnDrawBezierLine(e));
 	}
 
-	/*internal static void OnDrawEllipse(Point<int> dimensions, Transformation[] transforms, Color color)
+	private void OnDrawEllipse(ProcedurallyGeneratedAnimals.EventArgs.EllipseEventArgs ellipse)
 	{
-		DrawEllipse?.Invoke(null, new EllipseEventArgs(dimensions, transforms, color));
+		DrawEllipse?.Invoke(this, new EllipseEventArgs(ellipse));
 	}
 
-	internal static void OnDrawBezierLine(Point<double>[] points, Transformation[] transformations)
+	private void OnDrawBezierLine(ProcedurallyGeneratedAnimals.EventArgs.BezierLineEventArgs bezierLine)
 	{
-		DrawBezierLine?.Invoke(null, new BezierLineEventArgs(points, transformations));
+		DrawBezierLine?.Invoke(this, new BezierLineEventArgs(bezierLine));
 	}
 
-	internal static void OnDrawBezierLine(Point<double>[] points, Transformation[] transformations, Color color)
+	private void OnClearCanvas()
 	{
-		DrawBezierLine?.Invoke(null, new BezierLineEventArgs(points, transformations, color));
-	}*/
+		ClearCanvas?.Invoke(this, System.EventArgs.Empty);
+	}
+
+	public void Draw(double x, double y)
+	{
+		OnClearCanvas();
+
+		Point<double> mouse = new(x, y);
+
+		if (Point.Distance(mouse, data.Animal.HeadPosition) < data.Animal.Speed)
+			return;
+
+		data.Animal.Step(mouse);
+		data.Animal.Draw();
+	}
 }

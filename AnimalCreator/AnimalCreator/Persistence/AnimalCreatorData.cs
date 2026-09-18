@@ -7,8 +7,6 @@ namespace AnimalCreator.Persistence;
 public sealed class AnimalCreatorData
 {
 	private const int LENGTH = 10;
-	private const int WINDOW_HEIGHT = 800;
-	private const int WINDOW_WIDTH = 600;
 
 	private readonly AnimalDescriptor[] animals;
 	private Animal animal;
@@ -28,7 +26,7 @@ public sealed class AnimalCreatorData
 	}
 	public int WaitTime => waitTime;
 
-	public AnimalCreatorData()
+	public AnimalCreatorData(int windowWidth, int windowHeight)
 	{
 		AnimalDescriptor snake = new(
 			[
@@ -210,7 +208,7 @@ public sealed class AnimalCreatorData
 		animals[1] = fish;
 		animals[2] = lizard;
 
-		animal = snake.Create(new Point<int>(WINDOW_WIDTH, WINDOW_HEIGHT));
+		animal = snake.Create(new Point<int>(windowWidth, windowHeight));
 	}
 
 	private int? FirstEmptyIndex()
@@ -239,9 +237,9 @@ public sealed class AnimalCreatorData
 
 	public void AddAnimal(AnimalDescriptor animal, uint index) => animals[index] = animal;
 
-	public void SelectIndex(uint index)
+	public void SelectIndex(uint index, int windowWidth, int windowHeight)
 	{
 		if (index < LENGTH)
-			animal = animals[index].Create(new Point<int>(WINDOW_WIDTH, WINDOW_HEIGHT));
+			animal = animals[index].Create(new Point<int>(windowWidth, windowHeight));
 	}
 }

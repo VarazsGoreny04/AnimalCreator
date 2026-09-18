@@ -61,5 +61,5 @@ internal class BackFin : BodyPart
 	/// <summary>
 	/// Draws this fin instance.
 	/// </summary>
-	public override void Draw() => Animal.OnDrawBezierLine(GetPoints(this), [], color);
+	public override void Draw() => Animal.OnDrawBezierLine(GetPoints(this), null, null, color);
 }

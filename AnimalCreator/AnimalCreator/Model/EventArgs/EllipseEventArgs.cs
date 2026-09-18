@@ -1,5 +1,4 @@
 ﻿using ProcedurallyGeneratedAnimals;
-using ProcedurallyGeneratedAnimals.Transformations;
 
 namespace AnimalCreator.Model.EventArgs;
 
@@ -12,14 +11,15 @@ public class EllipseEventArgs : ProcedurallyGeneratedAnimals.EventArgs.EllipseEv
 	/// Creates an EllipseEventArgs object.
 	/// </summary>
 	/// <param name="dimensions">The dimensions of the ellipse.</param>
-	/// <param name="transforms">The transformations of the ellipse.</param>
+	/// <param name="position">The position of the ellipse.</param>
+	/// <param name="angle">The angle of the ellipse.</param>
 	/// <param name="color">The color of the ellipse.</param>
-	public EllipseEventArgs(Point<int> dimensions, Transformation[] transforms, Color color) : base(dimensions, transforms, color) { }
+	public EllipseEventArgs(Point<int> dimensions, Point<double> position, double? angle, Color? color) : base(dimensions, position, angle, color) { }
 
 	/// <summary>
 	/// Creates an EllipseEventArgs object.
 	/// </summary>
-	/// <param name="dimensions">The dimensions of the ellipse.</param>
-	/// <param name="transforms">The transformations of the ellipse.</param>
-	public EllipseEventArgs(Point<int> dimensions, Transformation[] transforms) : this(dimensions, transforms, new Color(0, 0, 0, 0)) { }
+	/// <param name="eventArgs">The <see cref="ProcedurallyGeneratedAnimals.EventArgs.BezierLineEventArgs"/> to copy values from.</param>
+	public EllipseEventArgs(ProcedurallyGeneratedAnimals.EventArgs.EllipseEventArgs eventArgs)
+		: this(eventArgs.Dimensions, eventArgs.Position, eventArgs.Angle, eventArgs.Color) { }
 }

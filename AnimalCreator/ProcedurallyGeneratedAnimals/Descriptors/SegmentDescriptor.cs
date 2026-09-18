@@ -1,5 +1,4 @@
-﻿using ProcedurallyGeneratedAnimals.BodyParts;
-using System;
+﻿using System;
 
 namespace ProcedurallyGeneratedAnimals.Descriptors;
 
@@ -48,16 +47,11 @@ public class SegmentDescriptor
 	/// <returns>The Segment object.</returns>
 	internal virtual Segment Create(Point<double> prevOrigin)
 	{
-		Segment segment = new(
+		return new(
 			new Point<double>(prevOrigin.X - segmentDistance, prevOrigin.Y),
 			Math.Abs(segmentDistance),
 			skinRadius,
-			new BodyPart[bodyPartDescriptors.Length]
+			bodyPartDescriptors
 		);
-
-		for (int i = bodyPartDescriptors.Length - 1; i >= 0; --i)
-			segment.BodyParts[i] = bodyPartDescriptors[i].Create(segment);
-
-		return segment;
 	}
 }

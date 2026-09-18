@@ -65,6 +65,6 @@ internal class TailFin : BodyPart
 		headSegment.Origin = segment.Origin;
 		Segment.PullNext(headSegment);
 
-		Animal.OnDrawBezierLine(GetPoints(this), [], color);
+		Animal.OnDrawBezierLine(GetPoints(this), null, null, color);
 	}
 }
