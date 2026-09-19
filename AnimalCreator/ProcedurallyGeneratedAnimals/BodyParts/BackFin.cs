@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProcedurallyGeneratedAnimals.ShapeDataTypes;
+using System;
 using System.Collections.Generic;
 
 namespace ProcedurallyGeneratedAnimals.BodyParts;
@@ -61,5 +62,5 @@ internal class BackFin : BodyPart
 	/// <summary>
 	/// Draws this fin instance.
 	/// </summary>
-	public override void Draw() => Animal.OnDrawBezierLine(GetPoints(this), null, null, color);
+	public override List<ShapeData> Draw() => [new BezierLineData(GetPoints(this), null, null, color)];
 }

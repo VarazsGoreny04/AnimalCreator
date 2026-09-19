@@ -1,4 +1,5 @@
 ﻿using ProcedurallyGeneratedAnimals.Descriptors;
+using ProcedurallyGeneratedAnimals.ShapeDataTypes;
 using System;
 using System.Collections.Generic;
 
@@ -103,7 +104,7 @@ internal class Leg : BodyPart
 		/// </summary>
 		/// <param name="leg">The leg to draw.</param>
 		/// <param name="color">The color of the leg.</param>
-		public static void Draw(OneLeg leg, Color color)
+		public static List<ShapeData> Draw(OneLeg leg, Color color)
 		{
 			TwoWayKinematics(leg);
 
@@ -117,13 +118,17 @@ internal class Leg : BodyPart
 					TwoWayKinematics(leg);
 			}
 
-			foreach (Segment segment in leg.headSegment)
-				Segment.DrawBodyParts(segment, Render.Bottom);
-
-			Animal.OnDrawBezierLine(Segment.GetPoints(leg.headSegment), null, null, color);
+			List<ShapeData> result = [];
 
 			foreach (Segment segment in leg.headSegment)
-				Segment.DrawBodyParts(segment, Render.Top);
+				result.AddRange(Segment.DrawBodyParts(segment, Render.Bottom));
+
+			result.Add(new BezierLineData(Segment.GetPoints(leg.headSegment), null, null, color));
+
+			foreach (Segment segment in leg.headSegment)
+				result.AddRange(Segment.DrawBodyParts(segment, Render.Top));
+
+			return result;
 		}
 	}
 
@@ -167,7 +172,7 @@ internal class Leg : BodyPart
 	/// <param name="leg">The leg to draw.</param>
 	/// <param name="color">The color of the leg.</param>
 	/// <param name="stepTo">Point to step on.</param>
-	protected static void DrawOne(Segment segment, Point<double> frontVector, Point<double> normalVector, OneLeg leg, Color color, Point<double> stepTo)
+	protected static List<ShapeData> DrawOne(Segment segment, Point<double> frontVector, Point<double> normalVector, OneLeg leg, Color color, Point<double> stepTo)
 	{
 		leg.HeadSegment.Origin = Point.Add(segment.Origin, Point.Scale(normalVector, leg.HeadSegment.DistanceFromPrev));
 
@@ -177,17 +182,19 @@ internal class Leg : BodyPart
 		if (distanceFromTarget > leg.Range || bodyLegAngle < 30)
 			leg.StandsOn = OneLeg.GetNewTarget(leg, frontVector, normalVector, stepTo);
 
-		OneLeg.Draw(leg, color);
+		return OneLeg.Draw(leg, color);
 	}
 
 	/// <summary>
 	/// Draws this leg instance.
 	/// </summary>
-	public override void Draw()
+	public override List<ShapeData> Draw()
 	{
 		Point<double> normalizedFrontVector = Point.Normalize(Segment.GetFrontVector(segment));
 
-		DrawOne(segment, normalizedFrontVector, Point.NormalRight(normalizedFrontVector), left, color, stepTo);
-		DrawOne(segment, normalizedFrontVector, Point.NormalLeft(normalizedFrontVector), right, color, stepTo);
+		return [
+			.. DrawOne(segment, normalizedFrontVector, Point.NormalRight(normalizedFrontVector), left, color, stepTo),
+			.. DrawOne(segment, normalizedFrontVector, Point.NormalLeft(normalizedFrontVector), right, color, stepTo)
+		];
 	}
 }

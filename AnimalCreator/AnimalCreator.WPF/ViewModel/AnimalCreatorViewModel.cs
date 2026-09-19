@@ -34,9 +34,27 @@ public class AnimalCreatorViewModel
 		shapes = [];
 
 		model = new AnimalCreatorModel(400, 300);
-		model.DrawEllipse += new EventHandler<EllipseEventArgs>((_, e) => shapes.Add(DrawEllipse(e)));
-		model.DrawBezierLine += new EventHandler<BezierLineEventArgs>((_, e) => shapes.Add(DrawBezierLine(e)));
-		model.ClearCanvas += new EventHandler((_, e) => { });
+		model.DrawEllipse += new EventHandler<EllipseEventArgs>((_, e) =>
+		{
+			Application.Current.Dispatcher.Invoke(delegate
+			{
+				shapes.Add(DrawEllipse(e));
+			});
+		});
+		model.DrawBezierLine += new EventHandler<BezierLineEventArgs>((_, e) =>
+		{
+			Application.Current.Dispatcher.Invoke(delegate
+			{
+				shapes.Add(DrawBezierLine(e));
+			});
+		});
+		model.ClearCanvas += new EventHandler((_, _) =>
+		{
+			Application.Current.Dispatcher.Invoke(delegate
+			{
+				shapes.Clear();
+			});
+		});
 
 		tokenSource = new CancellationTokenSource();
 		pause = false;
@@ -45,7 +63,7 @@ public class AnimalCreatorViewModel
 		DrawLoop();
 
 		shapes.Add(
-			new EllipseData(100, 100, new TranslateTransform(50, 0), new SolidColorBrush(Colors.Transparent)));
+				new EllipseData(100, 100, new TranslateTransform(50, 0), new SolidColorBrush(Colors.Transparent)));
 	}
 
 	private static EllipseData DrawEllipse(EllipseEventArgs ellipseEventArgs)
@@ -75,51 +93,46 @@ public class AnimalCreatorViewModel
 		);
 	}
 
-	private static Point[] MakeCurvePoints(Point[] points, double tension)
+	// Legyen az ellipszis és a path is path, csak más geometriával
+	// Négyzetes Bézier curve kell amihez meg kell írni a függvényt
+	// Át kell írni a Segment és a BodyPart konstruktorát a JavaScript projektben is
+
+	private static Point[] MakeCurvePoints(Point[] points)
 	{
-		if (points.Length < 2)
-			return points;
-
-		double control_scale = tension / 0.5 * 0.175;
-
-		List<Point> result_points = [points[0]];
-
-		for (int i = 0; i < points.Length - 1; i++)
+		static void AddOneCurve(Point prev, Point current, Point next, ref List<Point> result)
 		{
-			// Get the point and its neighbors.
-			Point pt_before = points[Math.Max(i - 1, 0)];
-			Point pt = points[i];
-			Point pt_after = points[i + 1];
-			Point pt_after2 = points[Math.Min(i + 2, points.Length - 1)];
+			Vector v = (prev - next) / 4;
 
-			double dx1 = pt_after.X - pt_before.X;
-			double dy1 = pt_after.Y - pt_before.Y;
-
-			Point p1 = points[i];
-			Point p4 = pt_after;
-
-			double dx = pt_after.X - pt_before.X;
-			double dy = pt_after.Y - pt_before.Y;
-			Point p2 = new(
-				pt.X + control_scale * dx,
-				pt.Y + control_scale * dy
-			);
-
-			dx = pt_after2.X - pt.X;
-			dy = pt_after2.Y - pt.Y;
-			Point p3 = new(
-				pt_after.X - control_scale * dx,
-				pt_after.Y - control_scale * dy
-			);
-
-			// Save points p2, p3, and p4.
-			result_points.Add(p2);
-			result_points.Add(p3);
-			result_points.Add(p4);
+			result.Add(current + v);
+			result.Add(current - v);
 		}
 
-		// Return the points.
-		return [.. result_points];
+		int length = points.Length;
+
+		if (points.Length < 3)
+			return points;
+
+		Point prev = points[0];
+		Point current = points[1];
+		Point next;
+
+		List<Point> result = new((length - 1) * 2) { prev };
+
+		AddOneCurve(points[^1], prev, current, ref result);
+
+		for (int i = 2; i < points.Length; ++i)
+		{
+			next = points[i];
+
+			AddOneCurve(prev, current, next, ref result);
+
+			prev = current;
+			current = next;
+		}
+
+		AddOneCurve(prev, current, points[0], ref result);
+
+		return [.. result];
 	}
 
 	private static PathData DrawBezierLine(BezierLineEventArgs bezierLineEventArgs)
@@ -160,14 +173,13 @@ public class AnimalCreatorViewModel
 		Task.Run(
 			async () =>
 			{
-				/*while (true)
+				while (true)
 				{
-					if (pause)
-						continue;*/
-				Task task = Task.Delay(model.Data.WaitTime);
+					if (pause || Point.Distance(mouse, data.Animal.HeadPosition) < data.Animal.Speed))
+						continue;
 
-				Application.Current.Dispatcher.Invoke((Action)delegate
-				{
+					await Task.Delay(model.Data.WaitTime);
+
 					/*try
 					{
 						mouse = Mouse.GetPosition(canvas);
@@ -175,10 +187,7 @@ public class AnimalCreatorViewModel
 					catch { }*/
 
 					model.Draw(mouse.X, mouse.Y);
-				});
-
-				await task;
-				/*}*/
+				}
 			},
 			tokenSource.Token
 		);

@@ -1,11 +1,12 @@
 ﻿using ProcedurallyGeneratedAnimals;
+using ProcedurallyGeneratedAnimals.ShapeDataTypes;
 
 namespace AnimalCreator.Model.EventArgs;
 
 /// <summary>
-/// Describes parameters of a Bézier line.
+/// Describes a Bézier line.
 /// </summary>
-public class BezierLineEventArgs : ProcedurallyGeneratedAnimals.EventArgs.BezierLineEventArgs
+public class BezierLineEventArgs : BezierLineData, IShapeEventArgs
 {
 	/// <summary>
 	/// Creates an BezierLineEventArgs object.
@@ -20,6 +21,6 @@ public class BezierLineEventArgs : ProcedurallyGeneratedAnimals.EventArgs.Bezier
 	/// Creates an BezierLineEventArgs object.
 	/// </summary>
 	/// <param name="eventArgs">The <see cref="ProcedurallyGeneratedAnimals.EventArgs.BezierLineEventArgs"/> to copy values from.</param>
-	public BezierLineEventArgs(ProcedurallyGeneratedAnimals.EventArgs.BezierLineEventArgs eventArgs)
+	public BezierLineEventArgs(BezierLineData eventArgs)
 		: this(eventArgs.Points, eventArgs.Position, eventArgs.Angle, eventArgs.Color) { }
 }

@@ -1,7 +1,9 @@
 ﻿using AnimalCreator.Model.EventArgs;
 using AnimalCreator.Persistence;
 using ProcedurallyGeneratedAnimals;
+using ProcedurallyGeneratedAnimals.ShapeDataTypes;
 using System;
+using System.Collections.Generic;
 
 namespace AnimalCreator.Model;
 
@@ -15,39 +17,30 @@ public sealed class AnimalCreatorModel
 	public event EventHandler<BezierLineEventArgs>? DrawBezierLine;
 	public event EventHandler? ClearCanvas;
 
-	public AnimalCreatorModel(int windowWidth, int windowHeight)
+	public AnimalCreatorModel(int windowWidth, int windowHeight) => data = new AnimalCreatorData(windowWidth, windowHeight);
+
+	public IShapeEventArgs[] Draw(double x, double y)
 	{
-		data = new AnimalCreatorData(windowWidth, windowHeight);
-
-		Animal.DrawEllipse += new EventHandler<ProcedurallyGeneratedAnimals.EventArgs.EllipseEventArgs>((_, e) => OnDrawEllipse(e));
-		Animal.DrawBezierLine += new EventHandler<ProcedurallyGeneratedAnimals.EventArgs.BezierLineEventArgs>((_, e) => OnDrawBezierLine(e));
-	}
-
-	private void OnDrawEllipse(ProcedurallyGeneratedAnimals.EventArgs.EllipseEventArgs ellipse)
-	{
-		DrawEllipse?.Invoke(this, new EllipseEventArgs(ellipse));
-	}
-
-	private void OnDrawBezierLine(ProcedurallyGeneratedAnimals.EventArgs.BezierLineEventArgs bezierLine)
-	{
-		DrawBezierLine?.Invoke(this, new BezierLineEventArgs(bezierLine));
-	}
-
-	private void OnClearCanvas()
-	{
-		ClearCanvas?.Invoke(this, System.EventArgs.Empty);
-	}
-
-	public void Draw(double x, double y)
-	{
-		OnClearCanvas();
-
 		Point<double> mouse = new(x, y);
 
-		if (Point.Distance(mouse, data.Animal.HeadPosition) < data.Animal.Speed)
-			return;
-
 		data.Animal.Step(mouse);
-		data.Animal.Draw();
+		ShapeData[] shapes = data.Animal.Draw();
+
+		List<IShapeEventArgs> result = new(shapes.Length);
+		IShapeEventArgs shapeEventArgs;
+
+		foreach (ShapeData shape in shapes)
+		{
+			shapeEventArgs = shape switch
+			{
+				EllipseData s => new EllipseEventArgs(s),
+				BezierLineData s => new BezierLineEventArgs(s),
+				_ => throw new NotImplementedException($"The conversion from {nameof(ShapeData)} to {nameof(IShapeEventArgs)} must be implemented for every type!")
+			};
+
+			result.Add(shapeEventArgs);
+		}
+
+		return [.. result];
 	}
 }

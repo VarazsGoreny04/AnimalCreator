@@ -1,4 +1,7 @@
-﻿namespace ProcedurallyGeneratedAnimals.BodyParts;
+﻿using ProcedurallyGeneratedAnimals.ShapeDataTypes;
+using System.Collections.Generic;
+
+namespace ProcedurallyGeneratedAnimals.BodyParts;
 
 /// <summary>
 /// Describes a body part of a creature.
@@ -34,5 +37,5 @@ internal abstract class BodyPart
 	/// <summary>
 	/// Draws this body part instance.
 	/// </summary>
-	public abstract void Draw();
+	public abstract List<ShapeData> Draw();
 }

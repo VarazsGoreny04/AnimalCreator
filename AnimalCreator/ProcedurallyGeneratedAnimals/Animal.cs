@@ -1,5 +1,5 @@
 ﻿using ProcedurallyGeneratedAnimals.Descriptors;
-using ProcedurallyGeneratedAnimals.EventArgs;
+using ProcedurallyGeneratedAnimals.ShapeDataTypes;
 using System;
 using System.Collections.Generic;
 
@@ -23,9 +23,6 @@ public sealed class Animal
 	/// <returns>The speed of the animal.</returns>
 	public int Speed => speed;
 
-	public static event EventHandler<EllipseEventArgs>? DrawEllipse;
-	public static event EventHandler<BezierLineEventArgs>? DrawBezierLine;
-
 	/// <summary>
 	/// Creates an <see cref="Animal"/> object.
 	/// </summary>
@@ -45,72 +42,56 @@ public sealed class Animal
 	}
 
 	/// <summary>
-	/// Invokes the DrawEllipse event.
-	/// </summary>
-	/// <param name="dimensions">The dimensions of the ellipse.</param>
-	/// <param name="position">The position of the ellipse.</param>
-	/// <param name="angle">The angle of the ellipse.</param>
-	/// <param name="color">The color of the ellipse.</param>
-	internal static void OnDrawEllipse(Point<int> dimensions, Point<double> position, double? angle = null, Color? color = null)
-	{
-		DrawEllipse?.Invoke(null, new EllipseEventArgs(dimensions, position, angle, color));
-	}
-
-	/// <summary>
-	/// Invokes the DrawBezierLine event.
-	/// </summary>
-	/// <param name="points">The points of the line.</param>
-	/// <param name="position">The origin position of the line.</param>
-	/// <param name="angle">The angle of the line.</param>
-	/// <param name="color">The color of the line.</param>
-	internal static void OnDrawBezierLine(Point<double>[] points, Point<double>? position = null, double? angle = null, Color? color = null)
-	{
-		DrawBezierLine?.Invoke(null, new BezierLineEventArgs(points, position, angle, color));
-	}
-
-	/// <summary>
 	/// Draws a line on the spine of the animal.
 	/// </summary>
 	/// <param name="animal">The animal.</param>
-	public static void DrawSpine(Animal animal)
+	public static BezierLineData DrawSpine(Animal animal)
 	{
 		List<Point<double>> points = [];
 		foreach (Segment segment in animal.headSegment)
 			points.Add(segment.Origin);
 
-		OnDrawBezierLine([.. points], new Point<double>(0, 0), 0);
+		return new BezierLineData([.. points]);
 	}
 
 	/// <summary>
 	/// Draws a circle to every segment of the body.
 	/// </summary>
 	/// <param name="animal">The animal.</param>
-	public static void DrawCircles(Animal animal)
+	public static List<EllipseData> DrawCircles(Animal animal)
 	{
+		List<EllipseData> circles = [];
+
 		foreach (Segment segment in animal.headSegment)
-			OnDrawEllipse(new Point<int>(segment.SkinRadius, segment.SkinRadius), segment.Origin, 0);
+			circles.Add(new EllipseData(new Point<int>(segment.SkinRadius, segment.SkinRadius), segment.Origin));
+
+		return circles;
 	}
 
 	/// <summary>
 	/// Draws the outline of the animal.
 	/// </summary>
 	/// <param name="animal">The animal.</param>
-	public static void DrawOutline(Animal animal) => OnDrawBezierLine(Segment.GetPoints(animal.headSegment), null, null, animal.bodyColor);
+	public static BezierLineData DrawOutline(Animal animal) => new(Segment.GetPoints(animal.headSegment), null, null, animal.bodyColor);
 
 	/// <summary>
 	/// Draws this animal instance.
 	/// </summary>
-	public void Draw()
+	public ShapeData[] Draw()
 	{
-		foreach (Segment segment in headSegment)
-			Segment.DrawBodyParts(segment, Render.Bottom);
-
-		DrawOutline(this);
-		// DrawCircles(this);
-		// DrawSpine(this);
+		List<ShapeData> shapes = [];
 
 		foreach (Segment segment in headSegment)
-			Segment.DrawBodyParts(segment, Render.Top);
+			shapes.AddRange(Segment.DrawBodyParts(segment, Render.Bottom));
+
+		shapes.Add(DrawOutline(this));
+		// shapes.AddRange(DrawCircles(this));
+		// shapes.Add(DrawSpine(this));
+
+		foreach (Segment segment in headSegment)
+			shapes.AddRange(Segment.DrawBodyParts(segment, Render.Top));
+
+		return [.. shapes];
 	}
 
 	/// <summary>

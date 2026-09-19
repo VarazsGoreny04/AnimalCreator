@@ -1,4 +1,5 @@
 ﻿using ProcedurallyGeneratedAnimals.Descriptors;
+using ProcedurallyGeneratedAnimals.ShapeDataTypes;
 using System;
 using System.Collections.Generic;
 
@@ -60,11 +61,11 @@ internal class TailFin : BodyPart
 	/// <summary>
 	/// Draws this fin instance.
 	/// </summary>
-	public override void Draw()
+	public override List<ShapeData> Draw()
 	{
 		headSegment.Origin = segment.Origin;
 		Segment.PullNext(headSegment);
 
-		Animal.OnDrawBezierLine(GetPoints(this), null, null, color);
+		return [new BezierLineData(GetPoints(this), null, null, color)];
 	}
 }

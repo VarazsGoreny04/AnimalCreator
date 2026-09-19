@@ -1,11 +1,12 @@
 ﻿using ProcedurallyGeneratedAnimals;
+using ProcedurallyGeneratedAnimals.ShapeDataTypes;
 
 namespace AnimalCreator.Model.EventArgs;
 
 /// <summary>
-/// Describes parameters of an ellipse.
+/// Describes an ellipse.
 /// </summary>
-public class EllipseEventArgs : ProcedurallyGeneratedAnimals.EventArgs.EllipseEventArgs
+public class EllipseEventArgs : EllipseData, IShapeEventArgs
 {
 	/// <summary>
 	/// Creates an EllipseEventArgs object.
@@ -20,6 +21,6 @@ public class EllipseEventArgs : ProcedurallyGeneratedAnimals.EventArgs.EllipseEv
 	/// Creates an EllipseEventArgs object.
 	/// </summary>
 	/// <param name="eventArgs">The <see cref="ProcedurallyGeneratedAnimals.EventArgs.BezierLineEventArgs"/> to copy values from.</param>
-	public EllipseEventArgs(ProcedurallyGeneratedAnimals.EventArgs.EllipseEventArgs eventArgs)
+	public EllipseEventArgs(EllipseData eventArgs)
 		: this(eventArgs.Dimensions, eventArgs.Position, eventArgs.Angle, eventArgs.Color) { }
 }

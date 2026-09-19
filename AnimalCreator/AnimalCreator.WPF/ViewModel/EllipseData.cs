@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace AnimalCreator.WPF.ViewModel;
 

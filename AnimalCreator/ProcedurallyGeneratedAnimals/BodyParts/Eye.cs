@@ -1,4 +1,7 @@
-﻿namespace ProcedurallyGeneratedAnimals.BodyParts;
+﻿using ProcedurallyGeneratedAnimals.ShapeDataTypes;
+using System.Collections.Generic;
+
+namespace ProcedurallyGeneratedAnimals.BodyParts;
 
 /// <summary>
 /// Describes one pair of eyes of a creature.
@@ -37,14 +40,16 @@ internal class Eye : BodyPart
 	/// <summary>
 	/// Draws this eye instance.
 	/// </summary>
-	public override void Draw()
+	public override List<ShapeData> Draw()
 	{
 		Point<double> frontScaled = Point.Scale(Segment.GetFrontVector(segment), distanceToOrigin);
 
 		Point<double> eyePoint = Point.Add(segment.Origin, Point.RotateRadian(frontScaled, radianToFront));
-		Animal.OnDrawEllipse(new Point<int>(radius, radius), eyePoint, null, color);
-
 		Point<double> eyePointMirrored = Point.Add(segment.Origin, Point.RotateRadian(frontScaled, -radianToFront));
-		Animal.OnDrawEllipse(new Point<int>(radius, radius), eyePointMirrored, null, color);
+
+		return [
+			new EllipseData(new Point<int>(radius, radius), eyePoint, null, color),
+			new EllipseData(new Point<int>(radius, radius), eyePointMirrored, null, color)
+		];
 	}
 }

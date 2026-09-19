@@ -1,5 +1,6 @@
 ﻿using ProcedurallyGeneratedAnimals.BodyParts;
 using ProcedurallyGeneratedAnimals.Descriptors;
+using ProcedurallyGeneratedAnimals.ShapeDataTypes;
 using System;
 using System.Collections.Generic;
 
@@ -256,13 +257,17 @@ internal class Segment
 	/// </summary>
 	/// <param name="segment">The segment with the bodyParts.</param>
 	/// <param name="render">The render mode.</param>
-	public static void DrawBodyParts(Segment segment, Render render)
+	public static List<ShapeData> DrawBodyParts(Segment segment, Render render)
 	{
+		List<ShapeData> shapes = [];
+
 		foreach (BodyPart bodyPart in segment.bodyParts)
 		{
 			if (bodyPart.Render == render)
-				bodyPart.Draw();
+				shapes.AddRange(bodyPart.Draw());
 		}
+
+		return shapes;
 	}
 
 	/// <summary>

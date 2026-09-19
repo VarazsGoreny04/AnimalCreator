@@ -1,5 +1,7 @@
 ﻿using ProcedurallyGeneratedAnimals.Descriptors;
+using ProcedurallyGeneratedAnimals.ShapeDataTypes;
 using System;
+using System.Collections.Generic;
 
 namespace ProcedurallyGeneratedAnimals.BodyParts;
 
@@ -47,24 +49,15 @@ internal class Antenna : BodyPart
 	}
 
 	/// <summary>
-	/// Draws a loop.
-	/// </summary>
-	/// <param name="position">The position of the loop.</param>
-	/// <param name="angle">The angle of the loop.</param>
-	/// <param name="points">The points of the loop.</param>
-	public static void DrawLoopByOrientation(Point<double>[] points, Point<double>? position, double? angle, Color? color)
-	{
-		Animal.OnDrawBezierLine(points, position, angle, color);
-	}
-
-	/// <summary>
 	/// Draws this antenna instance.
 	/// </summary>
-	public override void Draw()
+	public override List<ShapeData> Draw()
 	{
 		double bodyAngle = Point.AngleOfVector(Point.Reverse(Segment.GetFrontVector(segment)));
 
-		DrawLoopByOrientation(points, segment.Origin, bodyAngle + angle, color);
-		DrawLoopByOrientation(pointsMirrored, segment.Origin, bodyAngle - angle, color);
+		return [
+			new BezierLineData(points, segment.Origin, bodyAngle + angle, color),
+			new BezierLineData(pointsMirrored, segment.Origin, bodyAngle - angle, color)
+		];
 	}
 }
