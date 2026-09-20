@@ -1,4 +1,6 @@
-﻿namespace ProcedurallyGeneratedAnimals.ShapeDataTypes;
+﻿using System.Collections.Generic;
+
+namespace ProcedurallyGeneratedAnimals.ShapeDataTypes;
 
 /// <summary>
 /// Describes a Bézier line.
@@ -29,5 +31,48 @@ public class BezierLineData	: ShapeData
 		this.points = points;
 		this.position = position;
 		this.angle = angle;
+	}
+
+	/// <summary>
+	/// Takes the points of the Bézier curve and creates a new array with midpoints.
+	/// </summary>
+	/// <param name="points">The original points.</param>
+	/// <returns>The extended array.</returns>
+	public static Point<double>[] MakeCubicBezier(Point<double>[] points)
+	{
+		static void AddOneCurve(Point<double> prev, Point<double> current, Point<double> next, ref List<Point<double>> result)
+		{
+			Point<double> v = Point.Divide(Point.Subtract(prev, next), 4);
+
+			result.Add(Point.Add(current, v));
+			result.Add(Point.Subtract(current, v));
+		}
+
+		int length = points.Length;
+
+		if (points.Length < 3)
+			return points;
+
+		Point<double> prev = points[0];
+		Point<double> current = points[1];
+		Point<double> next;
+
+		List<Point<double>> result = new((length - 1) * 2) { prev };
+
+		AddOneCurve(points[^1], prev, current, ref result);
+
+		for (int i = 2; i < points.Length; ++i)
+		{
+			next = points[i];
+
+			AddOneCurve(prev, current, next, ref result);
+
+			prev = current;
+			current = next;
+		}
+
+		AddOneCurve(prev, current, points[0], ref result);
+
+		return [.. result];
 	}
 }

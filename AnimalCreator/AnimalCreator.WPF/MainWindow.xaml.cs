@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using AnimalCreator.WPF.ViewModel;
+using System.Windows;
 
 namespace AnimalCreator.WPF;
 
@@ -7,8 +8,14 @@ namespace AnimalCreator.WPF;
 /// </summary>
 public partial class MainWindow : Window
 {
-	public MainWindow()
+	private AnimalCreatorViewModel viewModel;
+
+	public MainWindow(AnimalCreatorViewModel viewModel)
 	{
+		this.viewModel = viewModel;
+
+		DataContext = this.viewModel;
+
 		InitializeComponent();
 	}
 }

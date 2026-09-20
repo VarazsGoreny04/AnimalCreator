@@ -1,18 +1,30 @@
-﻿using System.Windows.Media;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows.Media;
 
 namespace AnimalCreator.WPF.ViewModel;
 
-public class PathData : ShapeData
+public class PathData : INotifyPropertyChanged
 {
-	private readonly Geometry pathFigures;
+	private readonly Geometry geometry;
+	private readonly Transform transformations;
 	private readonly Brush fill;
 
-	public Geometry PathFigures => pathFigures;
+	public Geometry Geometry => geometry;
+	public Transform Transformations => transformations;
 	public Brush Fill => fill;
 
-	public PathData(Geometry pathFigures, Transform transformations, Brush fill) : base(transformations)
+	public event PropertyChangedEventHandler? PropertyChanged;
+
+	public PathData(Geometry geometry, Transform transformations, Brush fill)
 	{
-		this.pathFigures = pathFigures;
+		this.geometry = geometry;
+		this.transformations = transformations;
 		this.fill = fill;
+	}
+
+	protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+	{
+		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
 }

@@ -7,7 +7,7 @@
 		d:DataContext="{d:DesignInstance Type=viewmodel:AnimalCreatorViewModel}"
 		mc:Ignorable="d"
 		Title="AnimalCreator" Width="{Binding WindowWidth}" Height="{Binding WindowHeight}">
-	<ItemsControl ItemsSource="{Binding Shapes}">
+	<ItemsControl ItemsSource="{Binding Shapes}" >
 		<ItemsControl.ItemsPanel>
 			<ItemsPanelTemplate>
 				<Canvas Background="DarkGreen" />
@@ -25,20 +25,10 @@
 		</ItemsControl.ItemContainerStyle>
 
 		<ItemsControl.Resources>
-			<DataTemplate DataType="{x:Type viewmodel:EllipseData}">
-				<Ellipse
-					Stroke="Black"
-					Width="{Binding Width}"
-					Height="{Binding Height}"
-					Margin="{Binding Margin}"
-					RenderTransform="{Binding Transformations}"
-					Fill="{Binding Fill}" />
-			</DataTemplate>
-
 			<DataTemplate DataType="{x:Type viewmodel:PathData}">
 				<Path
 					Stroke="Black"
-					Data="{Binding PathFigures}"
+					Data="{Binding Geometry}"
 					RenderTransform="{Binding Transformations}"
 					Fill="{Binding Fill}" />
 			</DataTemplate>

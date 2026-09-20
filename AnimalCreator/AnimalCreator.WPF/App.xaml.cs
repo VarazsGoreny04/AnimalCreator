@@ -24,7 +24,7 @@ public partial class App : Application
 	{
 		viewModel = new AnimalCreatorViewModel();
 
-		mainWindow = new MainWindow { DataContext = viewModel };
+		mainWindow = new MainWindow(viewModel);
 		mainWindow.Show();
 	}
 

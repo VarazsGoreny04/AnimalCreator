@@ -12,6 +12,12 @@ public class EllipseData : ShapeData
 	/// <returns>The dimensions of the ellipse.</returns>
 	public Point<int> Dimensions => dimensions;
 
+	/// <returns>The width of the ellipse.</returns>
+	public int Width => dimensions.X;
+
+	/// <returns>The height of the ellipse.</returns>
+	public int Height => dimensions.Y;
+
 	/// <returns>The position of the ellipse.</returns>
 	public Point<double> Position => position;
 

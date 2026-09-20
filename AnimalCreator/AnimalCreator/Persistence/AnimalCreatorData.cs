@@ -26,7 +26,7 @@ public sealed class AnimalCreatorData
 	}
 	public int WaitTime => waitTime;
 
-	public AnimalCreatorData(int windowWidth, int windowHeight)
+	public AnimalCreatorData(int windowWidth, int windowHeight, int fPS)
 	{
 		AnimalDescriptor snake = new(
 			[
@@ -209,6 +209,8 @@ public sealed class AnimalCreatorData
 		animals[2] = lizard;
 
 		animal = snake.Create(new Point<int>(windowWidth, windowHeight));
+
+		FPS = fPS;
 	}
 
 	private int? FirstEmptyIndex()
