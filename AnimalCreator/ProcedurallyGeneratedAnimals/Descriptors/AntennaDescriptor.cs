@@ -17,7 +17,7 @@ public class AntennaDescriptor : BodyPartDescriptor
 	public double Angle => angle;
 
 	/// <summary>
-	/// Creates an AntennaDescriptor object.
+	/// Creates an <see cref="AntennaDescriptor"/> object.
 	/// </summary>
 	/// <param name="antennaSegmentDescriptors">The segments of the antenna.</param>
 	/// <param name="angle">The angle to push the eye from the center of the segment.</param>

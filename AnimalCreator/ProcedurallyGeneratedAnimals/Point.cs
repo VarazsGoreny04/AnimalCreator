@@ -272,7 +272,7 @@ public static class Point
 	/// <param name="maxAngle">The maximum angle in degrees.</param>
 	/// <param name="minAngle">The minimum angle in degrees.</param>
 	/// <returns>The restricted vector.</returns>
-	public static Point<double> RestrictAngleOfRotation(Point<double> baseVector, Point<double> directionVector, double maxAngle, double minAngle)
+	public static Point<double> RestrictAngleOfRotation(Point<double> baseVector, Point<double> directionVector, double minAngle, double maxAngle)
 	{
 		double angleBetween = AngleOfVectors(baseVector, directionVector);
 

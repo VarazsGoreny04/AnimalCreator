@@ -13,7 +13,7 @@ public class TailFinDescriptor : BodyPartDescriptor
 	public int[] SegmentDistances => segmentDistances;
 
 	/// <summary>
-	/// Creates a TailFinDescriptor object.
+	/// Creates a <see cref="TailFinDescriptor"/> object.
 	/// </summary>
 	/// <param name="segmentDistances">The distances of the segments of the fin.</param>
 	/// <param name="color">The color of the fin.</param>

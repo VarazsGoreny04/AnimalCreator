@@ -14,7 +14,10 @@ public partial class App : Application
 
 	#region Constructors
 
-	public App() => Startup += new StartupEventHandler(AppStartUp);
+	public App()
+	{
+		Startup += new StartupEventHandler(AppStartUp);
+	}
 
 	#endregion
 
@@ -24,8 +27,11 @@ public partial class App : Application
 	{
 		viewModel = new AnimalCreatorViewModel();
 
-		mainWindow = new MainWindow(viewModel);
+		mainWindow = new MainWindow() { DataContext = viewModel	};
 		mainWindow.Show();
+
+		mainWindow.DrawArea.MouseMove += new System.Windows.Input.MouseEventHandler(viewModel.OnMouseMove);
+		mainWindow.Closing += new System.ComponentModel.CancelEventHandler(viewModel.OnClosingWindow);
 	}
 
 	#endregion

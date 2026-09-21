@@ -7,7 +7,7 @@ public class AnimalDescriptor
 {
 	protected SegmentDescriptor[] segmentDescriptors;
 	protected Color color;
-	protected int speed;
+	protected uint speed;
 
 	/// <returns>The segments of the animal.</returns>
 	public SegmentDescriptor[] SegmentDescriptors => segmentDescriptors;
@@ -16,15 +16,15 @@ public class AnimalDescriptor
 	public Color Color => color;
 
 	/// <returns>The speed of the animal.</returns>
-	public int Speed => speed;
+	public uint Speed => speed;
 
 	/// <summary>
-	/// Creates an AnimalDescriptor object.
+	/// Creates an <see cref="AnimalDescriptor"/> object.
 	/// </summary>
 	/// <param name="segmentDescriptors">The segments of the animal.</param>
 	/// <param name="color">The color of the body.</param>
 	/// <param name="speed">The speed of the animal.</param>
-	public AnimalDescriptor(SegmentDescriptor[] segmentDescriptors, Color color, int speed)
+	public AnimalDescriptor(SegmentDescriptor[] segmentDescriptors, Color color, uint speed)
 	{
 		this.segmentDescriptors = segmentDescriptors;
 		this.color = color;

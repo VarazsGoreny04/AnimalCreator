@@ -6,24 +6,24 @@
 public class LegSegmentDescriptor : AngledSegmentDescriptor
 {
 	/// <summary>
-	/// Creates a LegSegmentDescriptor object.
+	/// Creates a <see cref="LegSegmentDescriptor"/> object.
 	/// </summary>
 	/// <param name="segmentDistance">The distance form the previous segment.</param>
 	/// <param name="skinRadius">The radius of the skin at the segment.</param>
 	/// <param name="minAngle">The minimum angle of the joint.</param>
 	/// <param name="maxAngle">The maximum angle of the joint.</param>
 	/// <param name="bodyPartDescriptors">The bodyParts of the segment.</param>
-	public LegSegmentDescriptor(int segmentDistance, int skinRadius, double minAngle, double maxAngle, BodyPartDescriptor[] bodyPartDescriptors)
+	public LegSegmentDescriptor(int segmentDistance, uint skinRadius, double minAngle, double maxAngle, BodyPartDescriptor[] bodyPartDescriptors)
 		: base(segmentDistance, skinRadius, minAngle, maxAngle, bodyPartDescriptors) { }
 
 	/// <summary>
-	/// Creates a LegSegmentDescriptor object.
+	/// Creates a <see cref="LegSegmentDescriptor"/> object.
 	/// </summary>
 	/// <param name="segmentDistance">The distance form the previous segment.</param>
 	/// <param name="skinRadius">The radius of the skin at the segment.</param>
 	/// <param name="minAngle">The minimum angle of the joint.</param>
 	/// <param name="maxAngle">The maximum angle of the joint.</param>
-	public LegSegmentDescriptor(int segmentDistance, int skinRadius, double minAngle, double maxAngle)
+	public LegSegmentDescriptor(int segmentDistance, uint skinRadius, double minAngle, double maxAngle)
 		: this(segmentDistance, skinRadius, minAngle, maxAngle, []) { }
 
 	/// <summary>

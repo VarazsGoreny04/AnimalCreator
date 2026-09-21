@@ -13,7 +13,7 @@ public class BackFinDescriptor : BodyPartDescriptor
 	public int LengthInSegments => lengthInSegments;
 
 	/// <summary>
-	/// Creates a BackFinDescriptor object.
+	/// Creates a <see cref="BackFinDescriptor"/> object.
 	/// <param name="lengthInSegments">The number of segments the fin will go through.</param>
 	/// <param name="color">The color of the fin.</param>
 	/// <param name="render">Where to render.</param>

@@ -17,7 +17,7 @@ public class LegDescriptor : BodyPartDescriptor
 	public Point<int> StepTo => stepTo;
 
 	/// <summary>
-	/// Creates a LegDescriptor object.
+	/// Creates a <see cref="LegDescriptor"/> object.
 	/// </summary>
 	/// <param name="legSegmentDescriptors">The segments of the leg.</param>
 	/// <param name="stepTo">The position to step to.</param>

@@ -42,9 +42,10 @@ public class BezierLineData	: ShapeData
 	{
 		static void AddOneCurve(Point<double> prev, Point<double> current, Point<double> next, ref List<Point<double>> result)
 		{
-			Point<double> v = Point.Divide(Point.Subtract(prev, next), 4);
+			Point<double> v = Point.Divide(Point.Subtract(prev, next), 6);
 
 			result.Add(Point.Add(current, v));
+			result.Add(current);
 			result.Add(Point.Subtract(current, v));
 		}
 
@@ -57,9 +58,10 @@ public class BezierLineData	: ShapeData
 		Point<double> current = points[1];
 		Point<double> next;
 
-		List<Point<double>> result = new((length - 1) * 2) { prev };
+		List<Point<double>> first = new(3);
+		AddOneCurve(points[^1], prev, current, ref first);
 
-		AddOneCurve(points[^1], prev, current, ref result);
+		List<Point<double>> result = new(length * 3 + 1) { first[1], first[2] };
 
 		for (int i = 2; i < points.Length; ++i)
 		{
@@ -72,6 +74,9 @@ public class BezierLineData	: ShapeData
 		}
 
 		AddOneCurve(prev, current, points[0], ref result);
+
+		result.Add(first[0]);
+		result.Add(first[1]);
 
 		return [.. result];
 	}

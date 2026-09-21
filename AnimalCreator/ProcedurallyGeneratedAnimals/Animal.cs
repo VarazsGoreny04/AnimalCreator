@@ -12,7 +12,7 @@ public sealed class Animal
 {
 	private Segment headSegment;
 	private Color bodyColor;
-	private int speed;
+	private uint speed;
 
 	/// <returns>The head position.</returns>
 	public Point<double> HeadPosition => headSegment.Origin;
@@ -21,7 +21,7 @@ public sealed class Animal
 	public Color BodyColor => bodyColor;
 
 	/// <returns>The speed of the animal.</returns>
-	public int Speed => speed;
+	public uint Speed => speed;
 
 	/// <summary>
 	/// Creates an <see cref="Animal"/> object.
@@ -30,7 +30,7 @@ public sealed class Animal
 	/// <param name="descriptors">The descriptors of the body of the animal.</param>
 	/// <param name="bodyColor">The color of the animals body.</param>
 	/// <param name="speed">The speed of the animal.</param>
-	public Animal(Point<int> headPosition, SegmentDescriptor[] descriptors, Color bodyColor, int speed)
+	public Animal(Point<int> headPosition, SegmentDescriptor[] descriptors, Color bodyColor, uint speed)
 	{
 		if (descriptors.Length < 2)
 			throw new ArgumentException("An animal must have at least 2 segments!", nameof(descriptors));
@@ -63,7 +63,7 @@ public sealed class Animal
 		List<EllipseData> circles = [];
 
 		foreach (Segment segment in animal.headSegment)
-			circles.Add(new EllipseData(new Point<int>(segment.SkinRadius, segment.SkinRadius), segment.Origin));
+			circles.Add(new EllipseData(new Point<uint>(segment.SkinRadius, segment.SkinRadius), segment.Origin));
 
 		return circles;
 	}

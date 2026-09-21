@@ -47,9 +47,11 @@ internal class Eye : BodyPart
 		Point<double> eyePoint = Point.Add(segment.Origin, Point.RotateRadian(frontScaled, radianToFront));
 		Point<double> eyePointMirrored = Point.Add(segment.Origin, Point.RotateRadian(frontScaled, -radianToFront));
 
+		uint radius = (uint)this.radius;
+
 		return [
-			new EllipseData(new Point<int>(radius, radius), eyePoint, null, color),
-			new EllipseData(new Point<int>(radius, radius), eyePointMirrored, null, color)
+			new EllipseData(new Point<uint>(radius, radius), eyePoint, null, color),
+			new EllipseData(new Point<uint>(radius, radius), eyePointMirrored, null, color)
 		];
 	}
 }

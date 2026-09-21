@@ -6,32 +6,51 @@
 		xmlns:viewmodel="clr-namespace:AnimalCreator.WPF.ViewModel"
 		d:DataContext="{d:DesignInstance Type=viewmodel:AnimalCreatorViewModel}"
 		mc:Ignorable="d"
-		Title="AnimalCreator" Width="{Binding WindowWidth}" Height="{Binding WindowHeight}">
-	<ItemsControl ItemsSource="{Binding Shapes}" >
-		<ItemsControl.ItemsPanel>
-			<ItemsPanelTemplate>
-				<Canvas Background="DarkGreen" />
-			</ItemsPanelTemplate>
-		</ItemsControl.ItemsPanel>
+		Title="AnimalCreator"
+		MinWidth="300" Width="{Binding WindowWidth, Mode=TwoWay}" MinHeight="60" Height="{Binding WindowHeight, Mode=TwoWay}">
+	<Grid>
+		<ItemsControl x:Name="DrawArea" ItemsSource="{Binding Shapes}" Width="auto" Height="auto">
+			<ItemsControl.ItemsPanel>
+				<ItemsPanelTemplate>
+					<Canvas Background="DarkGreen"
+						Width="auto"
+						Height="auto"/>
+				</ItemsPanelTemplate>
+			</ItemsControl.ItemsPanel>
 
-		<ItemsControl.ItemContainerStyle>
-			<Style TargetType="ContentPresenter">
-				<Setter Property="Canvas.Top"
-					Value="0" />
+			<ItemsControl.ItemContainerStyle>
+				<Style TargetType="ContentPresenter">
+					<Setter Property="Canvas.Top" Value="0" />
+					<Setter Property="Canvas.Left" Value="0" />
+				</Style>
+			</ItemsControl.ItemContainerStyle>
 
-				<Setter Property="Canvas.Left"
-					Value="0" />
-			</Style>
-		</ItemsControl.ItemContainerStyle>
-
-		<ItemsControl.Resources>
-			<DataTemplate DataType="{x:Type viewmodel:PathData}">
-				<Path
+			<ItemsControl.Resources>
+				<DataTemplate DataType="{x:Type viewmodel:PathData}">
+					<Path
 					Stroke="Black"
 					Data="{Binding Geometry}"
 					RenderTransform="{Binding Transformations}"
-					Fill="{Binding Fill}" />
-			</DataTemplate>
-		</ItemsControl.Resources>
-	</ItemsControl>
+					Fill="{Binding Fill}"
+					StrokeStartLineCap="Round"
+					StrokeLineJoin="Round"
+					StrokeEndLineCap="Round" />
+				</DataTemplate>
+			</ItemsControl.Resources>
+		</ItemsControl>
+
+		<Grid Width="auto" Height="50" VerticalAlignment="Top">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+
+			<Button Grid.Column="0" Content="Snake" Foreground="#ff1a1a" Command="{Binding ChangeAnimalCommand}" CommandParameter="0" />
+			<Button Grid.Column="1" Content="Fish" Foreground="#337dff" Command="{Binding ChangeAnimalCommand}" CommandParameter="1" />
+			<Button  Grid.Column="2" Content="Lizard" Foreground="#8cff1a" Command="{Binding ChangeAnimalCommand}" CommandParameter="2" />
+			<Button  Grid.Column="3" Content="Pause" Foreground="#f2d49d" Command="{Binding PauseCommand}" />
+		</Grid>
+	</Grid>
 </Window>

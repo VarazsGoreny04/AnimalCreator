@@ -3,10 +3,12 @@ using ProcedurallyGeneratedAnimals.ShapeDataTypes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace AnimalCreator.WPF.ViewModel;
@@ -17,17 +19,17 @@ public class AnimalCreatorViewModel
 	private int windowHeight = 600;
 	private readonly AnimalCreatorModel model;
 	private readonly ObservableCollection<PathData> shapes;
-	private CancellationTokenSource tokenSource;
 	private bool pause;
 	private Point mouse;
+	private CancellationTokenSource? tokenSource;
 
 	public int WindowWidth { get => windowWidth; set => windowWidth = value; }
-
 	public int WindowHeight { get => windowHeight; set => windowHeight = value; }
-
 	public AnimalCreatorModel Model => model;
-
 	public ObservableCollection<PathData> Shapes => shapes;
+
+	public DelegateCommand PauseCommand { get; }
+	public DelegateCommand ChangeAnimalCommand { get; }
 
 	public AnimalCreatorViewModel()
 	{
@@ -35,59 +37,83 @@ public class AnimalCreatorViewModel
 
 		model = new AnimalCreatorModel(400, 300, 60);
 
-		tokenSource = new CancellationTokenSource();
+		mouse = new Point(windowWidth / 2, windowHeight / 2);
+		tokenSource = null;
 		pause = false;
-		mouse = new Point();
 
-		DrawLoop();
+		PauseCommand = new DelegateCommand(_ => pause = !pause);
+		ChangeAnimalCommand = new DelegateCommand(param =>
+		{
+			if (param?.ToString() is string text && uint.TryParse(text, out uint number))
+			{
+				model.Data.SelectIndex(number, windowWidth, WindowHeight);
+
+				ShapeData[] shapeData = model.Draw(mouse.X, mouse.Y);
+
+				shapes.Clear();
+				foreach (PathData pathData in DataToPathsConverter(shapeData))
+					shapes.Add(pathData);
+			}
+		});
+
+		RunLoop();
 	}
 
-	private static PathData DrawEllipse(EllipseData ellipseData)
+	private static PathData EllipsePathData(EllipseData ellipseData)
 	{
 		Color color = new();
-		if (ellipseData.Color is not null)
+		if (ellipseData.Color is ProcedurallyGeneratedAnimals.Color c)
 		{
-			color.R = ellipseData.Color.R;
-			color.G = ellipseData.Color.G;
-			color.B = ellipseData.Color.B;
-			color.A = ellipseData.Color.A;
+			color.R = c.R;
+			color.G = c.G;
+			color.B = c.B;
+			color.A = c.A;
 		}
 
+		TransformCollection transformCollection = [];
+
+		if (ellipseData.Rotation?.Center is ProcedurallyGeneratedAnimals.Point<double> point)
+			transformCollection.Add(new TranslateTransform(point.X, point.Y));
+
+		if (ellipseData.Rotation?.Angle is double angle)
+			transformCollection.Add(new RotateTransform(angle));
+
 		return new PathData(
-			new EllipseGeometry(new Point(ellipseData.Position.X, ellipseData.Position.Y), ellipseData.Width, ellipseData.Height),
-			ellipseData.Angle is double angle ? new RotateTransform(angle) : Transform.Identity,
+			new EllipseGeometry(
+				new Point(),
+				ellipseData.Width / 2,
+				ellipseData.Height / 2,
+				new TransformGroup() { Children = transformCollection }
+			),
+			new TranslateTransform(ellipseData.Position.X, ellipseData.Position.Y),
 			new SolidColorBrush(color)
 		);
 	}
 
 	// Át kell írni a Segment és a BodyPart konstruktorát a JavaScript projektben is
 
-	private static PathData DrawBezierLine(BezierLineData bezierLineData)
+	private static PathData BezierLinePathData(BezierLineData bezierLineData)
 	{
 		Point[] points = [.. BezierLineData.MakeCubicBezier(bezierLineData.Points).Select(x => new Point(x.X, x.Y))];
 
-		PathFigure figures = new(points[0], [new PolyBezierSegment(points[1..], true)], true);
+		PathFigure figures = new(points[0], [new PolyBezierSegment(points[1..], true)], false);
 
 		Color color = new();
-		if (bezierLineData.Color is not null)
+		if (bezierLineData.Color is ProcedurallyGeneratedAnimals.Color c)
 		{
-			color.R = bezierLineData.Color.R;
-			color.G = bezierLineData.Color.G;
-			color.B = bezierLineData.Color.B;
-			color.A = bezierLineData.Color.A;
+			color.R = c.R;
+			color.G = c.G;
+			color.B = c.B;
+			color.A = c.A;
 		}
 
-		TransformCollection transformations = [];
-
-		if (bezierLineData.Position is not null)
-			transformations.Add(new TranslateTransform(bezierLineData.Position.X, bezierLineData.Position.Y));
-
-		if (bezierLineData.Angle is double angle)
-			transformations.Add(new RotateTransform(angle));
-
 		return new PathData(
-			new PathGeometry([figures]),
-			new TransformGroup() { Children = transformations },
+			new PathGeometry(
+				[figures],
+				FillRule.Nonzero,
+				bezierLineData.Angle is double angle ? new RotateTransform(angle) : Transform.Identity
+			),
+			bezierLineData.Position is ProcedurallyGeneratedAnimals.Point<double> point ? new TranslateTransform(point.X, point.Y) : Transform.Identity,
 			new SolidColorBrush(color)
 		);
 	}
@@ -101,8 +127,8 @@ public class AnimalCreatorViewModel
 		{
 			pathData = shape switch
 			{
-				EllipseData s => DrawEllipse(s),
-				BezierLineData s => DrawBezierLine(s),
+				EllipseData s => EllipsePathData(s),
+				BezierLineData s => BezierLinePathData(s),
 				_ => throw new NotImplementedException($"The conversion from {nameof(ShapeData)} to {nameof(PathData)} must be implemented for every type!")
 			};
 
@@ -112,44 +138,51 @@ public class AnimalCreatorViewModel
 		return [.. result];
 	}
 
-	private void DrawLoop()
+	private void RunLoop()
 	{
-		tokenSource = new CancellationTokenSource();
+		tokenSource = tokenSource is null ? new CancellationTokenSource() : throw new ArgumentException("The previously started task is still running!");
 
-		Task.Run(
-			async () =>
+		async void Loop()
+		{
+			Task delay;
+			ProcedurallyGeneratedAnimals.Point<double> head;
+
+			while (!tokenSource.IsCancellationRequested)
 			{
-				while (true)
+				delay = Task.Delay(model.Data.WaitTime);
+
+				head = model.Data.Animal.HeadPosition;
+
+				if (!pause && (uint)Math.Sqrt(Math.Pow(mouse.X - head.X, 2) + Math.Pow(mouse.Y - head.Y, 2)) >= model.Data.Animal.Speed)
 				{
-					/*if (pause || Point.Distance(mouse, data.Animal.HeadPosition) < data.Animal.Speed))
-						continue;*/
-
-					Task delay = Task.Delay(model.Data.WaitTime);
-
-					/*try
-					{
-						mouse = Mouse.GetPosition(canvas);
-					}
-					catch { }*/
-
 					ShapeData[] shapes = model.Draw(mouse.X, mouse.Y);
 
-					try
+					Application.Current?.Dispatcher.Invoke(delegate
 					{
-						Application.Current.Dispatcher.Invoke(delegate
-						{
-							this.shapes.Clear();
-
-							foreach (PathData pathData in DataToPathsConverter(shapes))
-								this.shapes.Add(pathData);
-						});
-					}
-					catch { }
-
-					await delay;
+						this.shapes.Clear();
+						foreach (PathData pathData in DataToPathsConverter(shapes))
+							this.shapes.Add(pathData);
+					});
 				}
-			},
-			tokenSource.Token
-		);
+
+				await delay;
+			}
+
+			tokenSource = null;
+		}
+
+		_ = Task.Run(Loop);
+	}
+
+	public void OnMouseMove(object sender, MouseEventArgs e)
+	{
+		if (sender is UIElement element)
+			mouse = e.GetPosition(element);
+	}
+
+	public void OnClosingWindow(object? sender, CancelEventArgs e)
+	{
+		if (e.Cancel)
+			tokenSource?.Cancel();
 	}
 }

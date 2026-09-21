@@ -22,7 +22,7 @@ public class EyeDescriptor : BodyPartDescriptor
 	public int Radius => radius;
 
 	/// <summary>
-	/// Creates an EyeDescriptor object.
+	/// Creates an <see cref="EyeDescriptor"/> object.
 	/// </summary>
 	/// <param name="angleToFront">The angle to push the eye from the center of the segment.</param>
 	/// <param name="distanceToOrigin">The distance to push the eye from the center of the segment.</param>
