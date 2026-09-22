@@ -77,8 +77,8 @@ public class AnimalCreatorViewModel
 		return new PathData(
 			new EllipseGeometry(
 				center,
-				ellipseData.Width,
-				ellipseData.Height,
+				ellipseData.Width / 2,
+				ellipseData.Height / 2,
 				ellipseData.Rotation?.Angle is double angle ? new RotateTransform(angle) : Transform.Identity
 			),
 			new TranslateTransform(ellipseData.Position.X, ellipseData.Position.Y),

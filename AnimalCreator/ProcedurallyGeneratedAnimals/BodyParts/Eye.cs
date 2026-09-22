@@ -10,7 +10,7 @@ internal class Eye : BodyPart
 {
 	protected double radianToFront;
 	protected uint distanceToOrigin;
-	protected uint radius;
+	protected uint diameter;
 
 	/// <returns>The angle of the eye from the front vector of the segment.</returns>
 	public double RadianToFront => radianToFront;
@@ -19,7 +19,7 @@ internal class Eye : BodyPart
 	public uint DistanceToOrigin => distanceToOrigin;
 
 	/// <returns>Radius of the eye.</returns>
-	public uint Radius => radius;
+	public uint Diameter => diameter;
 
 	/// <summary>
 	/// Creates an <see cref="Eye"/> object.
@@ -28,13 +28,13 @@ internal class Eye : BodyPart
 	/// <param name="render">Where to render.</param>
 	/// <param name="angleToFront">The angle of the eye from the front vector of the segment.</param>
 	/// <param name="distanceToOrigin">The distance of the eye from the center of the segment.</param>
-	/// <param name="radius">Radius of the eye.</param>
-	/// <param name="color">Color of the eye.</param>
-	public Eye(Segment segment, Render render, double angleToFront, uint distanceToOrigin, uint radius, Color color) : base(segment, render, color)
+	/// <param name="diameter">The diameter of the eye.</param>
+	/// <param name="color">The color of the eye.</param>
+	public Eye(Segment segment, Render render, double angleToFront, uint distanceToOrigin, uint diameter, Color color) : base(segment, render, color)
 	{
 		radianToFront = double.DegreesToRadians(angleToFront);
 		this.distanceToOrigin = distanceToOrigin;
-		this.radius = radius;
+		this.diameter = diameter;
 	}
 
 	/// <summary>
@@ -47,7 +47,7 @@ internal class Eye : BodyPart
 		Point<double> eyePoint = Point.Add(segment.Origin, Point.RotateRadian(frontScaled, radianToFront));
 		Point<double> eyePointMirrored = Point.Add(segment.Origin, Point.RotateRadian(frontScaled, -radianToFront));
 
-		Point<uint> dimensions = new(radius, radius);
+		Point<uint> dimensions = new(diameter, diameter);
 
 		return [
 			new EllipseData(dimensions, eyePoint, null, color),
