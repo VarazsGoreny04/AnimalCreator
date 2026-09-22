@@ -12,7 +12,7 @@ namespace ProcedurallyGeneratedAnimals;
 internal class Segment
 {
 	protected Point<double> origin;
-	protected int distanceFromPrev;
+	protected uint distanceFromPrev;
 	protected uint skinRadius;
 	protected double minAngle;
 	protected double maxAngle;
@@ -26,7 +26,7 @@ internal class Segment
 	public Point<double> Origin { get => origin; set => origin = value; }
 
 	/// <returns>The distance of this segment from the previous one.</returns>
-	public int DistanceFromPrev => distanceFromPrev;
+	public uint DistanceFromPrev => distanceFromPrev;
 
 	/// <returns>The width of the creature at this segment.</returns>
 	public uint SkinRadius => skinRadius;
@@ -55,7 +55,7 @@ internal class Segment
 	/// <param name="bodyParts">The additional bodyParts.</param>
 	/// <param name="minAngle">The minimum angle of rotation at this segment.</param>
 	/// <param name="maxAngle">The maximum angle of rotation at this segment.</param>
-	public Segment(Point<double> origin, int distanceFromPrev, uint skinRadius, BodyPartDescriptor[] bodyParts, double minAngle, double maxAngle)
+	public Segment(Point<double> origin, uint distanceFromPrev, uint skinRadius, BodyPartDescriptor[] bodyParts, double minAngle, double maxAngle)
 	{
 		this.origin = origin;
 		this.distanceFromPrev = distanceFromPrev;
@@ -80,7 +80,7 @@ internal class Segment
 	/// <param name="distanceFromPrev">The distance of this segment from the previous one.</param>
 	/// <param name="skinRadius">The width of the creature at this segment.</param>
 	/// <param name="bodyParts">The additional bodyParts.</param>
-	public Segment(Point<double> origin, int distanceFromPrev, uint skinRadius, BodyPartDescriptor[] bodyParts)
+	public Segment(Point<double> origin, uint distanceFromPrev, uint skinRadius, BodyPartDescriptor[] bodyParts)
 		: this(origin, distanceFromPrev, skinRadius, bodyParts, 0, 0)
 	{
 		maxAngle = Math.Min(20 * this.distanceFromPrev / this.skinRadius, 60);
@@ -149,7 +149,7 @@ internal class Segment
 	/// <param name="segmentToPull">The segment to pull.</param>
 	/// <param name="distanceBetween">The needed distance in between the two segments.</param>
 	/// <param name="segmentInFront">The segment on the other side of the main segment.</param>
-	public static void Pull(Segment segment, Segment segmentToPull, int distanceBetween, Segment? segmentInFront = null)
+	public static void Pull(Segment segment, Segment segmentToPull, uint distanceBetween, Segment? segmentInFront = null)
 	{
 		Point<double> fromSegmentToNext = Point.Subtract(segmentToPull.origin, segment.origin);
 		Point<double> toJoinPoint = Point.Scale(fromSegmentToNext, distanceBetween);

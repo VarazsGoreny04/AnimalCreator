@@ -30,7 +30,7 @@ public sealed class AnimalCreatorData
 	{
 		AnimalDescriptor snake = new(
 			[
-				new AngledSegmentDescriptor(0, 26, 22, [new EyeDescriptor(115, 22, 10, new Color(0, 0, 0))]),
+				new AngledSegmentDescriptor(0, 26, 22, [new EyeDescriptor(115, 22, 5, new Color(0, 0, 0))]),
 				new SegmentDescriptor(26, 29),
 				new SegmentDescriptor(29, 23),
 				new SegmentDescriptor(22, 22),
@@ -97,7 +97,7 @@ public sealed class AnimalCreatorData
 
 		AnimalDescriptor lizard = new(
 			[
-				new AngledSegmentDescriptor(0, 26, 14, [new EyeDescriptor(115, 22, 10, new Color(0, 0, 0))]),
+				new AngledSegmentDescriptor(0, 26, 14, [new EyeDescriptor(115, 22, 5, new Color(0, 0, 0))]),
 				new SegmentDescriptor(26, 29),
 				new SegmentDescriptor(29, 20),
 				new SegmentDescriptor(22, 30,
@@ -182,7 +182,7 @@ public sealed class AnimalCreatorData
 
 		AnimalDescriptor fish = new(
 			[
-				new AngledSegmentDescriptor(0, 18, 20, [new EyeDescriptor(100, 16, 20, new Color(0, 0, 100), Render.Bottom)]),
+				new AngledSegmentDescriptor(0, 18, 20, [new EyeDescriptor(100, 16, 10, new Color(0, 0, 100), Render.Bottom)]),
 				new SegmentDescriptor(22, 30),
 				new SegmentDescriptor(33, 34,
 					[
@@ -242,6 +242,6 @@ public sealed class AnimalCreatorData
 	public void SelectIndex(uint index, int windowWidth, int windowHeight)
 	{
 		if (index < LENGTH)
-			animal = animals[index].Create(new Point<int>(windowWidth, windowHeight));
+			animal = animals[index].Create(new Point<int>(windowWidth / 2, windowHeight / 2));
 	}
 }

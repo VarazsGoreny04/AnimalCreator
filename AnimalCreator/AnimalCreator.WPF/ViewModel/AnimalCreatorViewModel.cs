@@ -3,12 +3,10 @@ using ProcedurallyGeneratedAnimals.ShapeDataTypes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media;
 
 namespace AnimalCreator.WPF.ViewModel;
@@ -17,15 +15,13 @@ public class AnimalCreatorViewModel
 {
 	private int windowWidth = 800;
 	private int windowHeight = 600;
+
 	private readonly AnimalCreatorModel model;
 	private readonly ObservableCollection<PathData> shapes;
 	private bool pause;
 	private Point mouse;
 	private CancellationTokenSource? tokenSource;
 
-	public int WindowWidth { get => windowWidth; set => windowWidth = value; }
-	public int WindowHeight { get => windowHeight; set => windowHeight = value; }
-	public AnimalCreatorModel Model => model;
 	public ObservableCollection<PathData> Shapes => shapes;
 
 	public DelegateCommand PauseCommand { get; }
@@ -46,7 +42,7 @@ public class AnimalCreatorViewModel
 		{
 			if (param?.ToString() is string text && uint.TryParse(text, out uint number))
 			{
-				model.Data.SelectIndex(number, windowWidth, WindowHeight);
+				model.Data.SelectIndex(number, windowWidth, windowHeight);
 
 				ShapeData[] shapeData = model.Draw(mouse.X, mouse.Y);
 
@@ -55,6 +51,12 @@ public class AnimalCreatorViewModel
 					shapes.Add(pathData);
 			}
 		});
+
+		ShapeData[] shapeData = model.Draw(mouse.X, mouse.Y);
+
+		shapes.Clear();
+		foreach (PathData pathData in DataToPathsConverter(shapeData))
+			shapes.Add(pathData);
 
 		RunLoop();
 	}
@@ -70,31 +72,27 @@ public class AnimalCreatorViewModel
 			color.A = c.A;
 		}
 
-		TransformCollection transformCollection = [];
-
-		if (ellipseData.Rotation?.Center is ProcedurallyGeneratedAnimals.Point<double> point)
-			transformCollection.Add(new TranslateTransform(point.X, point.Y));
-
-		if (ellipseData.Rotation?.Angle is double angle)
-			transformCollection.Add(new RotateTransform(angle));
+		Point center = ellipseData.Rotation?.Center is ProcedurallyGeneratedAnimals.Point<double> point ? new Point(point.X, point.Y) : new Point();
 
 		return new PathData(
 			new EllipseGeometry(
-				new Point(),
-				ellipseData.Width / 2,
-				ellipseData.Height / 2,
-				new TransformGroup() { Children = transformCollection }
+				center,
+				ellipseData.Width,
+				ellipseData.Height,
+				ellipseData.Rotation?.Angle is double angle ? new RotateTransform(angle) : Transform.Identity
 			),
 			new TranslateTransform(ellipseData.Position.X, ellipseData.Position.Y),
 			new SolidColorBrush(color)
 		);
 	}
 
-	// Át kell írni a Segment és a BodyPart konstruktorát a JavaScript projektben is
+	// Ki kell írni az exception-öket mindkét projektben
+	// JavaScript-ben Math.abs() amennyit csak lehet tüntess el
+	// region blokkok mindenhol
 
 	private static PathData BezierLinePathData(BezierLineData bezierLineData)
 	{
-		Point[] points = [.. BezierLineData.MakeCubicBezier(bezierLineData.Points).Select(x => new Point(x.X, x.Y))];
+		Point[] points = [.. BezierLineData.MakeCubicBezierLoop(bezierLineData.Points).Select(x => new Point(x.X, x.Y))];
 
 		PathFigure figures = new(points[0], [new PolyBezierSegment(points[1..], true)], false);
 
@@ -174,15 +172,17 @@ public class AnimalCreatorViewModel
 		_ = Task.Run(Loop);
 	}
 
-	public void OnMouseMove(object sender, MouseEventArgs e)
+	public void OnMouseMove(Point point) => mouse = point;
+
+	public void OnWindowResize(int width, int height)
 	{
-		if (sender is UIElement element)
-			mouse = e.GetPosition(element);
+		windowWidth = width;
+		windowHeight = height;
 	}
 
-	public void OnClosingWindow(object? sender, CancelEventArgs e)
+	public void OnClosingWindow(bool cancel)
 	{
-		if (e.Cancel)
+		if (cancel)
 			tokenSource?.Cancel();
 	}
 }

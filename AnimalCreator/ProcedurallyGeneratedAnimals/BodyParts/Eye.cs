@@ -9,17 +9,17 @@ namespace ProcedurallyGeneratedAnimals.BodyParts;
 internal class Eye : BodyPart
 {
 	protected double radianToFront;
-	protected int distanceToOrigin;
-	protected int radius;
+	protected uint distanceToOrigin;
+	protected uint radius;
 
 	/// <returns>The angle of the eye from the front vector of the segment.</returns>
 	public double RadianToFront => radianToFront;
 
 	/// <returns>The distance of the eye from the center of the segment.</returns>
-	public int DistanceToOrigin => distanceToOrigin;
+	public uint DistanceToOrigin => distanceToOrigin;
 
 	/// <returns>Radius of the eye.</returns>
-	public int Radius => radius;
+	public uint Radius => radius;
 
 	/// <summary>
 	/// Creates an <see cref="Eye"/> object.
@@ -30,7 +30,7 @@ internal class Eye : BodyPart
 	/// <param name="distanceToOrigin">The distance of the eye from the center of the segment.</param>
 	/// <param name="radius">Radius of the eye.</param>
 	/// <param name="color">Color of the eye.</param>
-	public Eye(Segment segment, Render render, double angleToFront, int distanceToOrigin, int radius, Color color) : base(segment, render, color)
+	public Eye(Segment segment, Render render, double angleToFront, uint distanceToOrigin, uint radius, Color color) : base(segment, render, color)
 	{
 		radianToFront = double.DegreesToRadians(angleToFront);
 		this.distanceToOrigin = distanceToOrigin;
@@ -47,11 +47,11 @@ internal class Eye : BodyPart
 		Point<double> eyePoint = Point.Add(segment.Origin, Point.RotateRadian(frontScaled, radianToFront));
 		Point<double> eyePointMirrored = Point.Add(segment.Origin, Point.RotateRadian(frontScaled, -radianToFront));
 
-		uint radius = (uint)this.radius;
+		Point<uint> dimensions = new(radius, radius);
 
 		return [
-			new EllipseData(new Point<uint>(radius, radius), eyePoint, null, color),
-			new EllipseData(new Point<uint>(radius, radius), eyePointMirrored, null, color)
+			new EllipseData(dimensions, eyePoint, null, color),
+			new EllipseData(dimensions, eyePointMirrored, null, color)
 		];
 	}
 }

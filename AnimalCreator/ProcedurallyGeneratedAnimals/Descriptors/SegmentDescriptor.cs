@@ -1,4 +1,6 @@
-﻿namespace ProcedurallyGeneratedAnimals.Descriptors;
+﻿using System;
+
+namespace ProcedurallyGeneratedAnimals.Descriptors;
 
 /// <summary>
 /// Describes a segment.
@@ -47,7 +49,7 @@ public class SegmentDescriptor
 	{
 		return new(
 			new Point<double>(prevOrigin.X - segmentDistance, prevOrigin.Y),
-			segmentDistance,
+			(uint)Math.Abs(segmentDistance),
 			skinRadius,
 			bodyPartDescriptors
 		);

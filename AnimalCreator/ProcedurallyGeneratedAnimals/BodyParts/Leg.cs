@@ -39,7 +39,7 @@ internal class Leg : BodyPart
 		/// </summary>
 		/// <param name="origin">The origin of the parent segment.</param>
 		/// <param name="descriptors">The descriptors of the segments of the leg.</param>
-		public OneLeg(Point<int> origin, SegmentDescriptor[] descriptors)
+		public OneLeg(Point<double> origin, LegSegmentDescriptor[] descriptors)
 		{
 			if (descriptors.Length < 2)
 				throw new ArgumentException("A leg must have at least 2 segment descriptors!", nameof(descriptors));
@@ -151,14 +151,12 @@ internal class Leg : BodyPart
 	/// <param name="color">The color of the legs.</param>
 	public Leg(Segment segment, Render render, LegSegmentDescriptor[] descriptors, Point<int> stepTo, Color color) : base(segment, render, color)
 	{
-		Point<int> origin = Point.DoubleToInt(segment.Origin);
-
-		List<SegmentDescriptor> mirroredDescriptors = new(descriptors.Length);
+		List<LegSegmentDescriptor> mirroredDescriptors = new(descriptors.Length);
 		foreach (LegSegmentDescriptor descriptor in descriptors)
 			mirroredDescriptors.Add(LegSegmentDescriptor.Mirror(descriptor));
 
-		left = new OneLeg(origin, descriptors);
-		right = new OneLeg(origin, [.. mirroredDescriptors]);
+		left = new OneLeg(segment.Origin, descriptors);
+		right = new OneLeg(segment.Origin, [.. mirroredDescriptors]);
 
 		this.stepTo = Point.IntToDouble(stepTo);
 	}
@@ -166,15 +164,15 @@ internal class Leg : BodyPart
 	/// <summary>
 	/// Draws one leg.
 	/// </summary>
-	/// <param name="segment">The parent segment.</param>
+	/// <param name="origin">The origin of the parent segment.</param>
 	/// <param name="frontVector">The normalized front vector of the parent segment.</param>
 	/// <param name="normalVector">The normalized normal vector of the parent segment pointing towards the legs direction.</param>
 	/// <param name="leg">The leg to draw.</param>
 	/// <param name="color">The color of the leg.</param>
 	/// <param name="stepTo">Point to step on.</param>
-	protected static List<ShapeData> DrawOne(Segment segment, Point<double> frontVector, Point<double> normalVector, OneLeg leg, Color color, Point<double> stepTo)
+	protected static List<ShapeData> DrawOne(Point<double> origin, Point<double> frontVector, Point<double> normalVector, OneLeg leg, Color color, Point<double> stepTo)
 	{
-		leg.HeadSegment.Origin = Point.Add(segment.Origin, Point.Scale(normalVector, leg.HeadSegment.DistanceFromPrev));
+		leg.HeadSegment.Origin = Point.Add(origin, Point.Scale(normalVector, leg.HeadSegment.DistanceFromPrev));
 
 		double distanceFromTarget = Point.Distance(leg.StandsOn, leg.HeadSegment.Origin);
 		double bodyLegAngle = Math.Abs(Point.AngleOfVectors(frontVector, Point.Subtract(leg.HeadSegment.Origin, leg.HeadSegment.NextSegment!.Origin)));
@@ -193,8 +191,8 @@ internal class Leg : BodyPart
 		Point<double> normalizedFrontVector = Point.Normalize(Segment.GetFrontVector(segment));
 
 		return [
-			.. DrawOne(segment, normalizedFrontVector, Point.NormalRight(normalizedFrontVector), left, color, stepTo),
-			.. DrawOne(segment, normalizedFrontVector, Point.NormalLeft(normalizedFrontVector), right, color, stepTo)
+			.. DrawOne(segment.Origin, normalizedFrontVector, Point.NormalRight(normalizedFrontVector), left, color, stepTo),
+			.. DrawOne(segment.Origin, normalizedFrontVector, Point.NormalLeft(normalizedFrontVector), right, color, stepTo)
 		];
 	}
 }

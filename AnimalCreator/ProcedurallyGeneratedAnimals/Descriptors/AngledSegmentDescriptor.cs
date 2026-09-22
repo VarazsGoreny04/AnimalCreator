@@ -70,9 +70,9 @@ public class AngledSegmentDescriptor : SegmentDescriptor
 	/// <returns>The <see cref="Segment"/> object.</returns>
 	internal override Segment Create(Point<double> prevOrigin)
 	{
-		return new(
-			new Point<double>(prevOrigin.X, prevOrigin.Y - segmentDistance),
-			segmentDistance,
+		return new Segment(
+			new Point<double>(prevOrigin.X - segmentDistance, prevOrigin.Y),
+			(uint)Math.Abs(segmentDistance),
 			skinRadius,
 			bodyPartDescriptors,
 			minAngle,

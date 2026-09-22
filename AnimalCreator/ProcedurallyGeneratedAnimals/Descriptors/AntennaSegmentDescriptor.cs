@@ -1,4 +1,6 @@
-﻿namespace ProcedurallyGeneratedAnimals.Descriptors;
+﻿using System;
+
+namespace ProcedurallyGeneratedAnimals.Descriptors;
 
 /// <summary>
 /// Describes a segment of an antenna.
@@ -27,7 +29,7 @@ public class AntennaSegmentDescriptor : SegmentDescriptor
 	{
 		return new Segment(
 			Point.RotateDegree(new Point<double>(prevOrigin.X - segmentDistance, prevOrigin.Y), angle),
-			segmentDistance,
+			(uint)Math.Abs(segmentDistance),
 			skinRadius,
 			[]
 		);

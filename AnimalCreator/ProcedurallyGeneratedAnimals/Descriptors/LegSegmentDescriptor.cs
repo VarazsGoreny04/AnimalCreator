@@ -1,4 +1,6 @@
-﻿namespace ProcedurallyGeneratedAnimals.Descriptors;
+﻿using System;
+
+namespace ProcedurallyGeneratedAnimals.Descriptors;
 
 /// <summary>
 /// Describes a segment of a leg.
@@ -39,6 +41,23 @@ public class LegSegmentDescriptor : AngledSegmentDescriptor
 			-descriptor.maxAngle,
 			-descriptor.minAngle,
 			descriptor.bodyPartDescriptors
+		);
+	}
+
+	/// <summary>
+	/// Creates a <see cref="Segment"/> object by this descriptor.
+	/// </summary>
+	/// <param name="prevOrigin">The origin of the previous segment.</param>
+	/// <returns>The <see cref="Segment"/> object.</returns>
+	internal override Segment Create(Point<double> prevOrigin)
+	{
+		return new Segment(
+			new Point<double>(prevOrigin.X, prevOrigin.Y - segmentDistance),
+			(uint)Math.Abs(segmentDistance),
+			skinRadius,
+			bodyPartDescriptors,
+			minAngle,
+			maxAngle
 		);
 	}
 }

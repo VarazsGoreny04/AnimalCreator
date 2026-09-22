@@ -8,9 +8,9 @@
 		<Setter Property="HorizontalAlignment" Value="Center" />
 		<Setter Property="VerticalAlignment" Value="Center" />
 		<Setter Property="Width" Value="auto" />
-		<Setter Property="Height" Value="40" />
-		<Setter Property="Padding" Value="2,2,2,2" />
-		<Setter Property="Margin" Value="2,2,2,2" />
+		<Setter Property="Height" Value="46" />
+		<Setter Property="Padding" Value="2" />
+		<Setter Property="Margin" Value="2" />
 		<Setter Property="Background" Value="#1a1d1e" />
 
 		<Setter Property="BorderBrush" Value="DimGray" />
@@ -18,7 +18,12 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
-					<Border CornerRadius="20" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="2" Background="{TemplateBinding Background}">
+					<Border
+						CornerRadius="23"
+						Padding="5, 0, 5, 0"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="2"
+						Background="{TemplateBinding Background}">
 						<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
 					</Border>
 				</ControlTemplate>

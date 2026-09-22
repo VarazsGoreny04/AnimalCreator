@@ -33,22 +33,69 @@ public class BezierLineData	: ShapeData
 		this.angle = angle;
 	}
 
+	protected static void AddOneCurve(Point<double> prev, Point<double> current, Point<double> next, ref List<Point<double>> result)
+	{
+		Point<double> v = Point.Divide(Point.Subtract(prev, next), 6);
+
+		result.Add(Point.Add(current, v));
+		result.Add(current);
+		result.Add(Point.Subtract(current, v));
+	}
+
 	/// <summary>
-	/// Takes the points of the Bézier curve and creates a new array with midpoints.
+	/// Takes the points and creates a new array with midpoints.
 	/// </summary>
 	/// <param name="points">The original points.</param>
 	/// <returns>The extended array.</returns>
-	public static Point<double>[] MakeCubicBezier(Point<double>[] points)
+	public static Point<double>[] MakeCubicBezierLine(Point<double>[] points)
 	{
-		static void AddOneCurve(Point<double> prev, Point<double> current, Point<double> next, ref List<Point<double>> result)
-		{
-			Point<double> v = Point.Divide(Point.Subtract(prev, next), 6);
+		int length = points.Length;
 
-			result.Add(Point.Add(current, v));
-			result.Add(current);
-			result.Add(Point.Subtract(current, v));
+		if (points.Length < 3)
+			return points;
+
+		Point<double> prev = points[0];
+		Point<double> current = points[1];
+		Point<double> next;
+
+		List<Point<double>> result = new(length * 3 + 1);
+
+		{
+			List<Point<double>> first = new(3);
+			AddOneCurve(points[^1], prev, current, ref first);
+
+			result.Add(first[1]);
+			result.Add(first[2]);
 		}
 
+		for (int i = 2; i < points.Length; ++i)
+		{
+			next = points[i];
+
+			AddOneCurve(prev, current, next, ref result);
+
+			prev = current;
+			current = next;
+		}
+
+		{
+			List<Point<double>> last = new(3);
+			AddOneCurve(prev, current, points[0], ref last);
+
+			result.Add(last[0]);
+			result.Add(last[1]);
+		}
+
+		return [.. result];
+	}
+
+	/// <summary>
+	/// Takes the points and creates a new array with midpoints.
+	/// </summary>
+	/// <param name="points">The original points.</param>
+	/// <returns>The extended array.</returns>
+	public static Point<double>[] MakeCubicBezierLoop(Point<double>[] points)
+	{
 		int length = points.Length;
 
 		if (points.Length < 3)

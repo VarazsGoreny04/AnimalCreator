@@ -31,7 +31,7 @@ internal class TailFin : BodyPart
 		foreach (int distance in distances)
 			descriptors.Add(new SegmentDescriptor(distance, 1));
 
-		headSegment = Segment.CreateAndLink(Point.DoubleToInt(segment.Origin), [.. descriptors]);
+		headSegment = Segment.CreateAndLink(segment.Origin, [.. descriptors]);
 	}
 
 	/// <summary>

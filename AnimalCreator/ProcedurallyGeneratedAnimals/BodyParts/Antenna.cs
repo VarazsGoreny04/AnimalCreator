@@ -55,9 +55,11 @@ internal class Antenna : BodyPart
 	{
 		double bodyAngle = Point.AngleOfVector(Point.Reverse(Segment.GetFrontVector(segment)));
 
-		return [
-			new BezierLineData(points, segment.Origin, bodyAngle + angle, color),
-			new BezierLineData(pointsMirrored, segment.Origin, bodyAngle - angle, color)
-		];
+		List<ShapeData> result = new(2) { new BezierLineData(points, segment.Origin, bodyAngle + angle, color) };
+
+		if (pointsMirrored.Length > 0)
+			result.Add(new BezierLineData(pointsMirrored, segment.Origin, bodyAngle - angle, color));
+
+		return result;
 	}
 }
