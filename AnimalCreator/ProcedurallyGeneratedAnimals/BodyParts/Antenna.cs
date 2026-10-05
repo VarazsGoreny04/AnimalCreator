@@ -34,8 +34,9 @@ internal class Antenna : BodyPart
 	public Antenna(Segment segment, Render render, SegmentDescriptor[] descriptors, double angle, Color color) : base(segment, render, color)
 	{
 		points = Segment.GetPoints(Segment.CreateAndLink(new Point<int>(0, 0), descriptors));
+		this.angle = angle;
 
-		if (Math.Abs(this.angle) < 1)
+		if (Math.Abs(this.angle) % 180 < 1)
 			pointsMirrored = [];
 		else
 		{
@@ -44,8 +45,6 @@ internal class Antenna : BodyPart
 			for (int i = points.Length - 1; i >= 0; --i)
 				pointsMirrored[i] = new Point<double>(points[i].X, -points[i].Y);
 		}
-
-		this.angle = angle;
 	}
 
 	/// <summary>
