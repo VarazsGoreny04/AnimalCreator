@@ -5,9 +5,15 @@
 /// </summary>
 public class AnimalDescriptor
 {
+	#region Fields
+
 	protected SegmentDescriptor[] segmentDescriptors;
 	protected Color color;
 	protected uint speed;
+
+	#endregion
+
+	#region Properties
 
 	/// <returns>The segments of the animal.</returns>
 	public SegmentDescriptor[] SegmentDescriptors => segmentDescriptors;
@@ -17,6 +23,10 @@ public class AnimalDescriptor
 
 	/// <returns>The speed of the animal.</returns>
 	public uint Speed => speed;
+
+	#endregion
+
+	#region Constructors
 
 	/// <summary>
 	/// Creates an <see cref="AnimalDescriptor"/> object.
@@ -31,9 +41,15 @@ public class AnimalDescriptor
 		this.speed = speed;
 	}
 
+	#endregion
+
+	#region Public methods
+
 	/// <summary>
 	/// Creates an <see cref="Animal"/> object by this descriptor.
 	/// </summary>
 	/// <returns>The <see cref="Animal"/> object.</returns>
 	public Animal Create(Point<int> headPosition) => new(headPosition, segmentDescriptors, color, speed);
+
+	#endregion
 }

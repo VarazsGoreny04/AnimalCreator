@@ -15,10 +15,16 @@ internal class Leg : BodyPart
 	/// </summary>
 	protected class OneLeg
 	{
+		#region Fields
+
 		protected Segment headSegment;
 		protected Segment tailSegment;
 		protected Point<double> standsOn;
 		protected double range;
+
+		#endregion
+
+		#region Properties
 
 		/// <returns>The head segment of the leg.</returns>
 		public Segment HeadSegment => headSegment;
@@ -33,6 +39,10 @@ internal class Leg : BodyPart
 
 		/// <returns>The maximum distance between the head segment and the tail segment.</returns>
 		public double Range => range;
+
+		#endregion
+
+		#region Constructors
 
 		/// <summary>
 		/// Creates a <see cref="OneLeg"/> object.
@@ -56,6 +66,10 @@ internal class Leg : BodyPart
 
 			range = Point.Distance(tailSegment.Origin, headSegment.Origin);
 		}
+
+		#endregion
+
+		#region Public methods
 
 		/// <summary>
 		/// Gets a new step location for the given leg.
@@ -131,16 +145,26 @@ internal class Leg : BodyPart
 
 			return result;
 		}
+
+		#endregion
 	}
+
+	#region Fields
 
 	protected OneLeg left;
 	protected OneLeg right;
 	protected Point<double> stepTo;
 
-	/// <summary>
-	/// Gets or sets the point the leg stands on.
-	/// </summary>
-	public Point<double> StepTo { get => stepTo; set => stepTo = value; }
+	#endregion
+
+	#region Properties
+
+	/// <returns>Gets the point the leg stands on.</returns>
+	public Point<double> StepTo => stepTo;
+
+	#endregion
+
+	#region Constructors
 
 	/// <summary>
 	/// Creates a <see cref="Leg"/> object.
@@ -161,6 +185,10 @@ internal class Leg : BodyPart
 
 		this.stepTo = Point.IntToDouble(stepTo);
 	}
+
+	#endregion
+
+	#region Protected methods
 
 	/// <summary>
 	/// Draws one leg.
@@ -184,6 +212,10 @@ internal class Leg : BodyPart
 		return OneLeg.Draw(leg, color);
 	}
 
+	#endregion
+
+	#region Public methods
+
 	/// <summary>
 	/// Draws this leg instance.
 	/// </summary>
@@ -196,4 +228,6 @@ internal class Leg : BodyPart
 			.. DrawOne(segment.Origin, normalizedFrontVector, Point.NormalLeft(normalizedFrontVector), right, color, stepTo)
 		];
 	}
+
+	#endregion
 }

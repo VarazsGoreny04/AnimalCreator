@@ -7,9 +7,15 @@ namespace ProcedurallyGeneratedAnimals.ShapeDataTypes;
 /// </summary>
 public class BezierLineData	: ShapeData
 {
+	#region Fields
+
 	protected Point<double>[] points;
 	protected Point<double>? position;
 	protected double? angle;
+
+	#endregion
+
+	#region Properties
 
 	/// <returns>The points of the line.</returns>
 	public Point<double>[] Points => points;
@@ -19,6 +25,10 @@ public class BezierLineData	: ShapeData
 
 	/// <returns>The angle of the line.</returns>
 	public double? Angle => angle;
+
+	#endregion
+
+	#region Constructors
 
 	/// <summary>
 	/// Creates a <see cref="BezierLineData"/> object.
@@ -33,6 +43,10 @@ public class BezierLineData	: ShapeData
 		this.angle = angle;
 	}
 
+	#endregion
+
+	#region Protected methods
+
 	protected static void AddOneCurve(Point<double> prev, Point<double> current, Point<double> next, ref List<Point<double>> result)
 	{
 		Point<double> v = Point.Divide(Point.Subtract(prev, next), 6);
@@ -41,6 +55,10 @@ public class BezierLineData	: ShapeData
 		result.Add(current);
 		result.Add(Point.Subtract(current, v));
 	}
+
+	#endregion
+
+	#region Public methods
 
 	/// <summary>
 	/// Takes the points and creates a new array with midpoints.
@@ -127,4 +145,6 @@ public class BezierLineData	: ShapeData
 
 		return [.. result];
 	}
+
+	#endregion
 }

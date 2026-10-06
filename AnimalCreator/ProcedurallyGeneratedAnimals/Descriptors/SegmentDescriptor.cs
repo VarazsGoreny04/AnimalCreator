@@ -7,9 +7,15 @@ namespace ProcedurallyGeneratedAnimals.Descriptors;
 /// </summary>
 public class SegmentDescriptor
 {
+	#region Fields
+
 	protected int segmentDistance;
 	protected uint skinRadius;
 	protected BodyPartDescriptor[] bodyPartDescriptors;
+
+	#endregion
+
+	#region Properties
 
 	/// <returns>The distance form the previous segment.</returns>
 	public int SegmentDistance => segmentDistance;
@@ -19,6 +25,10 @@ public class SegmentDescriptor
 
 	/// <returns>The bodyParts of the segment.</returns>
 	public BodyPartDescriptor[] BodyPartDescriptors => bodyPartDescriptors;
+
+	#endregion
+
+	#region Constructors
 
 	/// <summary>
 	/// Creates a <see cref="SegmentDescriptor"/> object.
@@ -40,6 +50,10 @@ public class SegmentDescriptor
 	/// <param name="skinRadius">The radius of the skin at the segment.</param>
 	public SegmentDescriptor(int segmentDistance, uint skinRadius) : this(segmentDistance, skinRadius, []) { }
 
+	#endregion
+
+	#region Internal methods
+
 	/// <summary>
 	/// Creates a Segment object by this descriptor.
 	/// </summary>
@@ -54,4 +68,6 @@ public class SegmentDescriptor
 			bodyPartDescriptors
 		);
 	}
+
+	#endregion
 }

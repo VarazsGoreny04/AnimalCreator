@@ -7,10 +7,20 @@ namespace ProcedurallyGeneratedAnimals.Descriptors;
 /// </summary>
 public class TailFinDescriptor : BodyPartDescriptor
 {
+	#region Fields
+
 	protected int[] segmentDistances;
+
+	#endregion
+
+	#region Properties
 
 	/// <returns>The distances of the segments of the fin.</returns>
 	public int[] SegmentDistances => segmentDistances;
+
+	#endregion
+
+	#region Constructors
 
 	/// <summary>
 	/// Creates a <see cref="TailFinDescriptor"/> object.
@@ -20,10 +30,16 @@ public class TailFinDescriptor : BodyPartDescriptor
 	/// <param name="render">Where to render.</param>
 	public TailFinDescriptor(int[] segmentDistances, Color color, Render render = Render.Bottom) : base(render, color) => this.segmentDistances = segmentDistances;
 
+	#endregion
+
+	#region Internal methods
+
 	/// <summary>
 	/// Creates a <see cref="TailFin"/> object by this descriptor.
 	/// </summary>
 	/// <param name="segment">The parent segment.</param>
 	/// <returns>The <see cref="TailFin"/> object.</returns>
 	internal override BodyPart Create(Segment segment) => new TailFin(segment, render, segmentDistances, color);
+
+	#endregion
 }

@@ -7,14 +7,24 @@ namespace ProcedurallyGeneratedAnimals.Descriptors;
 /// </summary>
 public abstract class BodyPartDescriptor
 {
+	#region Fields
+
 	protected Render render;
 	protected Color color;
+
+	#endregion
+
+	#region Properties
 
 	/// <returns>Where to render.</returns>
 	public Render Render => render;
 
 	/// <returns>The color of the bodyPart.</returns>
 	public Color Color => color;
+
+	#endregion
+
+	#region Constructors
 
 	/// <summary>
 	/// Creates a <see cref="BodyPartDescriptor"/> object.
@@ -27,10 +37,16 @@ public abstract class BodyPartDescriptor
 		this.color = color;
 	}
 
+	#endregion
+
+	#region Internal methods
+
 	/// <summary>
 	/// Creates a <see cref="BodyPart"/> object by this descriptor.
 	/// </summary>
 	/// <param name="segment">The parent segment.</param>
 	/// <returns>The <see cref="BodyPart"/> object.</returns>
 	internal abstract BodyPart Create(Segment segment);
+
+	#endregion
 }

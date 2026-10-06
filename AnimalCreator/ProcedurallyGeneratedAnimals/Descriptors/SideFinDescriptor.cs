@@ -7,8 +7,14 @@ namespace ProcedurallyGeneratedAnimals.Descriptors;
 /// </summary>
 public class SideFinDescriptor : BodyPartDescriptor
 {
+	#region Fields
+
 	protected Point<uint> dimensions;
 	protected double angle;
+
+	#endregion
+
+	#region Properties
 
 	/// <returns>The width of the fin.</returns>
 	public uint Width => dimensions.X;
@@ -21,6 +27,10 @@ public class SideFinDescriptor : BodyPartDescriptor
 
 	/// <returns>The angle of the fin.</returns>
 	public double Angle => angle;
+
+	#endregion
+
+	#region Constructors
 
 	/// <summary>
 	/// Creates a <see cref="SideFinDescriptor"/> object.
@@ -46,10 +56,16 @@ public class SideFinDescriptor : BodyPartDescriptor
 	public SideFinDescriptor(uint width, uint length, double angle, Color color, Render render = Render.Bottom)
 		: this(new Point<uint>(width, length), angle, color, render) { }
 
+	#endregion
+
+	#region Internal methods
+
 	/// <summary>
 	/// Creates a <see cref="SideFin"/> object by this descriptor.
 	/// </summary>
 	/// <param name="segment">The parent segment.</param>
 	/// <returns>The <see cref="SideFin"/> object.</returns>
 	internal override BodyPart Create(Segment segment) => new SideFin(segment, render, dimensions, angle, color);
+
+	#endregion
 }

@@ -8,8 +8,14 @@ namespace ProcedurallyGeneratedAnimals.BodyParts;
 /// </summary>
 internal class SideFin : BodyPart
 {
+	#region Fields
+
 	protected Point<uint> dimensions;
 	protected double angle;
+
+	#endregion
+
+	#region Properties
 
 	/// <returns>The width of the fin.</returns>
 	public uint Width => dimensions.Y;
@@ -19,6 +25,10 @@ internal class SideFin : BodyPart
 
 	/// <returns>The angle between the fin and the spine of the animal.</returns>
 	public double Angle => angle;
+
+	#endregion
+
+	#region Constructors
 
 	/// <summary>
 	/// Creates a <see cref="SideFin"/> object.
@@ -46,6 +56,10 @@ internal class SideFin : BodyPart
 	public SideFin(Segment segment, Render render, uint width, uint length, double angle, Color color)
 		: this(segment, render, new Point<uint>(length, width), angle, color) { }
 
+	#endregion
+
+	#region Public methods
+
 	/// <summary>
 	/// Draws this fin instance.
 	/// </summary>
@@ -64,4 +78,6 @@ internal class SideFin : BodyPart
 			new EllipseData(dimensions, originRight, frontAngle + angle, center, color)
 		];
 	}
+
+	#endregion
 }

@@ -5,9 +5,15 @@
 /// </summary>
 public class EllipseData : ShapeData
 {
+	#region Fields
+
 	protected Point<uint> dimensions;
 	protected Point<double> position;
 	protected (double, Point<double>?)? rotation;
+
+	#endregion
+
+	#region Properties
 
 	/// <returns>The dimensions of the ellipse.</returns>
 	public Point<uint> Dimensions => dimensions;
@@ -23,6 +29,10 @@ public class EllipseData : ShapeData
 
 	/// <returns>The angle of the ellipse.</returns>
 	public (double Angle, Point<double>? Center)? Rotation => rotation;
+
+	#endregion
+
+	#region Constructors
 
 	/// <summary>
 	/// Creates an <see cref="EllipseData"/> object.
@@ -50,4 +60,6 @@ public class EllipseData : ShapeData
 		this.position = position;
 		rotation = angle is double d ? (d, null) : null;
 	}
+
+	#endregion
 }

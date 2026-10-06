@@ -7,14 +7,24 @@ namespace ProcedurallyGeneratedAnimals.Descriptors;
 /// </summary>
 public class LegDescriptor : BodyPartDescriptor
 {
+	#region Fields
+
 	protected LegSegmentDescriptor[] segmentDescriptors;
 	protected Point<int> stepTo;
+
+	#endregion
+
+	#region Properties
 
 	/// <returns>The segments of the leg.</returns>
 	public LegSegmentDescriptor[] SegmentDescriptors => segmentDescriptors;
 
 	/// <returns>The position to step to.</returns>
 	public Point<int> StepTo => stepTo;
+
+	#endregion
+
+	#region Constructors
 
 	/// <summary>
 	/// Creates a <see cref="LegDescriptor"/> object.
@@ -29,10 +39,16 @@ public class LegDescriptor : BodyPartDescriptor
 		this.stepTo = stepTo;
 	}
 
+	#endregion
+
+	#region Internal methods
+
 	/// <summary>
 	/// Creates a <see cref="Leg"/> object by this descriptor.
 	/// </summary>
 	/// <param name="segment">The parent segment.</param>
 	/// <returns>The <see cref="Leg"/> object.</returns>
 	internal override BodyPart Create(Segment segment) => new Leg(segment, render, segmentDescriptors, stepTo, color);
+
+	#endregion
 }

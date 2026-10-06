@@ -7,14 +7,24 @@ namespace ProcedurallyGeneratedAnimals.Descriptors;
 /// </summary>
 public class AngledSegmentDescriptor : SegmentDescriptor
 {
+	#region Fields
+
 	protected double minAngle;
 	protected double maxAngle;
+
+	#endregion
+
+	#region Properties
 
 	/// <returns>The minimum angle of the joint.</returns>
 	public double MinAngle => minAngle;
 
 	/// <returns>The maximum angle of the joint.</returns>
 	public double MaxAngle => maxAngle;
+
+	#endregion
+
+	#region Constructors
 
 	/// <summary>
 	/// Creates a <see cref="AngledSegmentDescriptor"/> object.
@@ -65,6 +75,10 @@ public class AngledSegmentDescriptor : SegmentDescriptor
 	public AngledSegmentDescriptor(int segmentDistance, uint skinRadius, double angle)
 		: this(segmentDistance, skinRadius, -angle, angle, []) { }
 
+	#endregion
+
+	#region Internal methods
+
 	/// <summary>
 	/// Creates a <see cref="Segment"/> object by this descriptor.
 	/// </summary>
@@ -81,4 +95,6 @@ public class AngledSegmentDescriptor : SegmentDescriptor
 			maxAngle
 		);
 	}
+
+	#endregion
 }

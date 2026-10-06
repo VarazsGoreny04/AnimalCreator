@@ -8,18 +8,28 @@ namespace ProcedurallyGeneratedAnimals.BodyParts;
 /// </summary>
 internal abstract class BodyPart
 {
+	#region Fields
+
 	protected Segment segment;
 	protected Render render;
 	protected Color color;
 
+	#endregion
+
+	#region Properties
+
 	/// <returns>The parent segment.</returns>
-	public Segment Segment { get => segment; set => segment = value; }
+	public Segment Segment => segment;
 
 	/// <returns>Where to render.</returns>
 	public Render Render => render;
 
 	/// <returns>Color of the bodyPart.</returns>
 	public Color Color => color;
+
+	#endregion
+
+	#region Constructors
 
 	/// <summary>
 	/// Creates a <see cref="BodyPart"/> object.
@@ -34,8 +44,14 @@ internal abstract class BodyPart
 		this.color = color;
 	}
 
+	#endregion
+
+	#region Public methods
+
 	/// <summary>
 	/// Draws this body part instance.
 	/// </summary>
 	public abstract List<ShapeData> Draw();
+
+	#endregion
 }

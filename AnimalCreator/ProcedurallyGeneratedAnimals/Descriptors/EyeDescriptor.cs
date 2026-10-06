@@ -7,9 +7,15 @@ namespace ProcedurallyGeneratedAnimals.Descriptors;
 /// </summary>
 public class EyeDescriptor : BodyPartDescriptor
 {
+	#region Fields
+
 	protected double angleToFront;
 	protected uint distanceToOrigin;
 	protected uint radius;
+
+	#endregion
+
+	#region Properties
 
 	/// <returns>The angle to push the eye from the center of the segment.</returns>
 	public double AngleToFront => angleToFront;
@@ -19,6 +25,10 @@ public class EyeDescriptor : BodyPartDescriptor
 
 	/// <returns>The radius of the eye.</returns>
 	public uint Radius => radius;
+
+	#endregion
+
+	#region Constructors
 
 	/// <summary>
 	/// Creates an <see cref="EyeDescriptor"/> object.
@@ -35,10 +45,16 @@ public class EyeDescriptor : BodyPartDescriptor
 		this.radius = radius;
 	}
 
+	#endregion
+
+	#region Internal methods
+
 	/// <summary>
 	/// Creates an <see cref="Eye"/> object by this descriptor.
 	/// </summary>
 	/// <param name="segment">The parent segment.</param>
 	/// <returns>The <see cref="Eye"/> object.</returns>
 	internal override BodyPart Create(Segment segment) => new Eye(segment, render, angleToFront, distanceToOrigin, radius, color);
+
+	#endregion
 }

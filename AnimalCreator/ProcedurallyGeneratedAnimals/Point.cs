@@ -9,14 +9,24 @@ namespace ProcedurallyGeneratedAnimals;
 /// <typeparam name="T">The type of the X and Y values.</typeparam>
 public sealed class Point<T> where T : INumber<T>
 {
+	#region Fields
+
 	private readonly T x;
 	private readonly T y;
+
+	#endregion
+
+	#region Properties
 
 	/// <returns>The X value.</returns>
 	public T X => x;
 
 	/// <returns>The Y value.</returns>
 	public T Y => y;
+
+	#endregion
+
+	#region Constructors
 
 	/// <summary>
 	/// Creates a <see cref="Point{T}"/> object.
@@ -28,6 +38,8 @@ public sealed class Point<T> where T : INumber<T>
 		this.x = x;
 		this.y = y;
 	}
+
+	#endregion
 }
 
 /// <summary>
@@ -35,6 +47,8 @@ public sealed class Point<T> where T : INumber<T>
 /// </summary>
 public static class Point
 {
+	#region Public methods
+
 	/// <summary>
 	/// Converts the fields of the given <see cref="Point{int}"/> form <see cref="int"/> to <see cref="double"/>.
 	/// </summary>
@@ -283,4 +297,6 @@ public static class Point
 
 		return RotateDegree(directionVector, toRotate);
 	}
+
+	#endregion
 }

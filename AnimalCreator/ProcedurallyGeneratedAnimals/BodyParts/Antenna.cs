@@ -10,9 +10,15 @@ namespace ProcedurallyGeneratedAnimals.BodyParts;
 /// </summary>
 internal class Antenna : BodyPart
 {
+	#region Fields
+
 	protected Point<double>[] points;
 	protected Point<double>[] pointsMirrored;
 	protected double angle;
+
+	#endregion
+
+	#region Properties
 
 	/// <returns>The points of the antenna.</returns>
 	public Point<double>[] Points => points;
@@ -23,8 +29,12 @@ internal class Antenna : BodyPart
 	/// <returns>The angle between the antenna and the spine of the animal.</returns>
 	public double Angle => angle;
 
+	#endregion
+
+	#region Constructors
+
 	/// <summary>
-	/// Creates a <see cref="TailFin"/> object.
+	/// Creates an <see cref="Antenna"/> object.
 	/// </summary>
 	/// <param name="segment">The parent segment.</param>
 	/// <param name="render">Where to render.</param>
@@ -47,6 +57,10 @@ internal class Antenna : BodyPart
 		}
 	}
 
+	#endregion
+
+	#region Public methods
+
 	/// <summary>
 	/// Draws this antenna instance.
 	/// </summary>
@@ -61,4 +75,6 @@ internal class Antenna : BodyPart
 
 		return result;
 	}
+
+	#endregion
 }

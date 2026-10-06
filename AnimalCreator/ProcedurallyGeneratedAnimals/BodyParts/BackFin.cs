@@ -9,10 +9,20 @@ namespace ProcedurallyGeneratedAnimals.BodyParts;
 /// </summary>
 internal class BackFin : BodyPart
 {
+	#region Fields
+
 	protected int lengthInSegments;
+
+	#endregion
+
+	#region Properties
 
 	/// <returns>The number of segments the fin will go through.</returns>
 	public int LengthInSegments => lengthInSegments;
+
+	#endregion
+
+	#region Constructors
 
 	/// <summary>
 	/// Creates a <see cref="BackFin"/> object.
@@ -29,6 +39,10 @@ internal class BackFin : BodyPart
 
 		this.lengthInSegments = lengthInSegments;
 	}
+
+	#endregion
+
+	#region Public methods
 
 	/// <summary>
 	/// Calculates the outline points of the fin.
@@ -64,4 +78,6 @@ internal class BackFin : BodyPart
 	/// Draws this fin instance.
 	/// </summary>
 	public override List<ShapeData> Draw() => [new BezierLineData(GetPoints(this), null, null, color)];
+
+	#endregion
 }

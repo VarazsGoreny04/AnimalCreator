@@ -7,10 +7,20 @@ namespace ProcedurallyGeneratedAnimals.Descriptors;
 /// </summary>
 public class AntennaSegmentDescriptor : SegmentDescriptor
 {
+	#region Fields
+
 	protected double angle;
+
+	#endregion
+
+	#region Properties
 
 	/// <returns>The angle of the segment from the previous one.</returns>
 	public double Angle => angle;
+
+	#endregion
+
+	#region Constructors
 
 	/// <summary>
 	/// Creates an <see cref="AntennaSegmentDescriptor"/> object.
@@ -19,6 +29,10 @@ public class AntennaSegmentDescriptor : SegmentDescriptor
 	/// <param name="skinRadius">The radius of the skin at the segment.</param>
 	/// <param name="angle">The angle of the segment from the previous one.</param>
 	public AntennaSegmentDescriptor(int segmentDistance, uint skinRadius, double angle) : base(segmentDistance, skinRadius) => this.angle = angle;
+
+	#endregion
+
+	#region Internal methods
 
 	/// <summary>
 	/// Creates a <see cref="Segment"/> object by this descriptor.
@@ -34,4 +48,6 @@ public class AntennaSegmentDescriptor : SegmentDescriptor
 			[]
 		);
 	}
+
+	#endregion
 }

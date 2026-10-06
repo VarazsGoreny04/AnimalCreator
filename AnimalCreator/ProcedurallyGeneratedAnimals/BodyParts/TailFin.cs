@@ -10,10 +10,20 @@ namespace ProcedurallyGeneratedAnimals.BodyParts;
 /// </summary>
 internal class TailFin : BodyPart
 {
+	#region Fields
+
 	protected Segment headSegment;
+
+	#endregion
+
+	#region Properties
 
 	/// <returns>The head segment of the fin.</returns>
 	public Segment HeadSegment => headSegment;
+
+	#endregion
+
+	#region Constructors
 
 	/// <summary>
 	/// Creates a <see cref="TailFin"/> object.
@@ -34,6 +44,10 @@ internal class TailFin : BodyPart
 
 		headSegment = Segment.CreateAndLink(segment.Origin, [.. descriptors]);
 	}
+
+	#endregion
+
+	#region Public methods
 
 	/// <summary>
 	/// Calculates the outline points of the fin.
@@ -69,4 +83,6 @@ internal class TailFin : BodyPart
 
 		return [new BezierLineData(GetPoints(this), null, null, color)];
 	}
+
+	#endregion
 }

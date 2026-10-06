@@ -10,9 +10,15 @@ namespace ProcedurallyGeneratedAnimals;
 /// </summary>
 public sealed class Animal
 {
-	private Segment headSegment;
-	private Color bodyColor;
-	private uint speed;
+	#region Fields
+
+	private readonly Segment headSegment;
+	private readonly Color bodyColor;
+	private readonly uint speed;
+
+	#endregion
+
+	#region Properties
 
 	/// <returns>The head position.</returns>
 	public Point<double> HeadPosition => headSegment.Origin;
@@ -22,6 +28,10 @@ public sealed class Animal
 
 	/// <returns>The speed of the animal.</returns>
 	public uint Speed => speed;
+
+	#endregion
+
+	#region Constructors
 
 	/// <summary>
 	/// Creates an <see cref="Animal"/> object.
@@ -41,6 +51,10 @@ public sealed class Animal
 		this.bodyColor = bodyColor;
 		this.speed = speed;
 	}
+
+	#endregion
+
+	#region Public methods
 
 	/// <summary>
 	/// Draws a line on the spine of the animal.
@@ -114,4 +128,6 @@ public sealed class Animal
 		headSegment.Origin = Point.Add(headSegment.Origin, restrictedDirection);
 		Segment.PullNext(headSegment);
 	}
+
+	#endregion
 }

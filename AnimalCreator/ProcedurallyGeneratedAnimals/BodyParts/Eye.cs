@@ -8,9 +8,15 @@ namespace ProcedurallyGeneratedAnimals.BodyParts;
 /// </summary>
 internal class Eye : BodyPart
 {
+	#region Fields
+
 	protected double radianToFront;
 	protected uint distanceToOrigin;
 	protected uint diameter;
+
+	#endregion
+
+	#region Properties
 
 	/// <returns>The angle of the eye from the front vector of the segment.</returns>
 	public double RadianToFront => radianToFront;
@@ -20,6 +26,10 @@ internal class Eye : BodyPart
 
 	/// <returns>Radius of the eye.</returns>
 	public uint Diameter => diameter;
+
+	#endregion
+
+	#region Constructors
 
 	/// <summary>
 	/// Creates an <see cref="Eye"/> object.
@@ -36,6 +46,10 @@ internal class Eye : BodyPart
 		this.distanceToOrigin = distanceToOrigin;
 		this.diameter = diameter;
 	}
+
+	#endregion
+
+	#region Public methods
 
 	/// <summary>
 	/// Draws this eye instance.
@@ -54,4 +68,6 @@ internal class Eye : BodyPart
 			new EllipseData(dimensions, eyePointMirrored, null, color)
 		];
 	}
+
+	#endregion
 }

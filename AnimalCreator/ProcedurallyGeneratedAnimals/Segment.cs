@@ -9,16 +9,22 @@ namespace ProcedurallyGeneratedAnimals;
 /// <summary>
 /// Describes a segment of a creature.
 /// </summary>
-internal class Segment
+internal sealed class Segment
 {
-	protected Point<double> origin;
-	protected uint distanceFromPrev;
-	protected uint skinRadius;
-	protected double minAngle;
-	protected double maxAngle;
-	protected BodyPart[] bodyParts;
-	protected Segment? prevSegment;
-	protected Segment? nextSegment;
+	#region Fields
+
+	private Point<double> origin;
+	private readonly uint distanceFromPrev;
+	private readonly uint skinRadius;
+	private readonly double minAngle;
+	private readonly double maxAngle;
+	private readonly BodyPart[] bodyParts;
+	private Segment? prevSegment;
+	private Segment? nextSegment;
+
+	#endregion
+
+	#region Properties
 
 	/// <summary>
 	/// Gets and sets the position of the segment.
@@ -45,6 +51,10 @@ internal class Segment
 
 	/// <returns>The next segment.</returns>
 	public Segment? NextSegment => nextSegment;
+
+	#endregion
+
+	#region Constructors
 
 	/// <summary>
 	/// Creates a Segment object.
@@ -87,13 +97,17 @@ internal class Segment
 		minAngle = -maxAngle;
 	}
 
+	#endregion
+
+	#region Public methods
+
 	/// <summary>
 	/// Creates the segments by the given descriptors and links them together.
 	/// </summary>
 	/// <param name="startingPoint">The starting position of the first segment.</param>
 	/// <param name="segmentDescriptors">The descriptors of the segments.</param>
 	/// <returns>The head segment of the linked list.</returns>
-	internal static Segment CreateAndLink(Point<double> startingPoint, SegmentDescriptor[] segmentDescriptors)
+	public static Segment CreateAndLink(Point<double> startingPoint, SegmentDescriptor[] segmentDescriptors)
 	{
 		Segment result = segmentDescriptors[0].Create(startingPoint);
 
@@ -283,4 +297,6 @@ internal class Segment
 
 		return Point.RestrictAngleOfRotation(fromSecondToFirst, direction, firstSegment.minAngle, firstSegment.maxAngle);
 	}
+
+	#endregion
 }

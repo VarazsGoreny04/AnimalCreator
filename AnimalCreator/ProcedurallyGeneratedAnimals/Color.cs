@@ -3,24 +3,34 @@
 /// <summary>
 /// Describes a color value.
 /// </summary>
-public class Color
+public sealed class Color
 {
-	private byte r;
-	private byte g;
-	private byte b;
-	private byte a;
+	#region Fields
+
+	private readonly byte r;
+	private readonly byte g;
+	private readonly byte b;
+	private readonly byte a;
+
+	#endregion
+
+	#region Properties
 
 	/// <returns>The amount of red from 0 to 255.</returns>
-	public byte R { get => r; set => r = value; }
+	public byte R => r;
 
 	/// <returns>The amount of green from 0 to 255.</returns>
-	public byte G { get => g; set => g = value; }
+	public byte G => g;
 
 	/// <returns>The amount of blue from 0 to 255.</returns>
-	public byte B { get => b; set => b = value; }
+	public byte B => b;
 
 	/// <returns>The alpha value from 0 to 255.</returns>
-	public byte A { get => a; set => a = value; }
+	public byte A => a;
+
+	#endregion
+
+	#region Constructors
 
 	/// <summary>Creates a <see cref="Color"/> object.</summary>
 	/// <param name="r">The amount of red from 0 to 255.</param>
@@ -34,4 +44,6 @@ public class Color
 		this.b = b;
 		this.a = a;
 	}
+
+	#endregion
 }

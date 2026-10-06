@@ -86,10 +86,6 @@ public class AnimalCreatorViewModel
 		);
 	}
 
-	// Ki kell írni az exception-öket mindkét projektben
-	// JavaScript-ben Math.abs() amennyit csak lehet tüntess el
-	// region blokkok mindenhol
-
 	private static PathData BezierLinePathData(BezierLineData bezierLineData)
 	{
 		Point[] points = [.. BezierLineData.MakeCubicBezierLoop(bezierLineData.Points).Select(x => new Point(x.X, x.Y))];
