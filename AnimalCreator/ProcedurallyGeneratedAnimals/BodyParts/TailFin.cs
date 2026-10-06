@@ -22,6 +22,7 @@ internal class TailFin : BodyPart
 	/// <param name="render">Where to render.</param>
 	/// <param name="distances">The distances between the segments of the fin.</param>
 	/// <param name="color">Color of the body part.</param>
+	/// <exception cref="ArgumentException">A tailfin must have at least 2 distance descriptors.</exception>
 	public TailFin(Segment segment, Render render, int[] distances, Color color) : base(segment, render, color)
 	{
 		if (distances.Length < 2)

@@ -39,6 +39,7 @@ internal class Leg : BodyPart
 		/// </summary>
 		/// <param name="origin">The origin of the parent segment.</param>
 		/// <param name="descriptors">The descriptors of the segments of the leg.</param>
+		/// <exception cref="ArgumentException">A leg must have at least 2 segment descriptors.</exception>
 		public OneLeg(Point<double> origin, LegSegmentDescriptor[] descriptors)
 		{
 			if (descriptors.Length < 2)

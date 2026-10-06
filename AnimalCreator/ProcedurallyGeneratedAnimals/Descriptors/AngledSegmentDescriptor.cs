@@ -24,6 +24,7 @@ public class AngledSegmentDescriptor : SegmentDescriptor
 	/// <param name="minAngle">The minimum angle of the joint.</param>
 	/// <param name="maxAngle">The maximum angle of the joint.</param>
 	/// <param name="bodyPartDescriptors">The bodyParts of the segment.</param>
+	/// <exception cref="ArgumentException">The <paramref name="maxAngle"/> must be bigger or equal than the <paramref name="minAngle"/>.</exception>
 	public AngledSegmentDescriptor(int segmentDistance, uint skinRadius, double minAngle, double maxAngle, BodyPartDescriptor[] bodyPartDescriptors)
 		: base(segmentDistance, skinRadius, bodyPartDescriptors)
 	{
@@ -51,6 +52,7 @@ public class AngledSegmentDescriptor : SegmentDescriptor
 	/// <param name="skinRadius">The radius of the skin at the segment.</param>
 	/// <param name="minAngle">The minimum angle of the joint.</param>
 	/// <param name="maxAngle">The maximum angle of the joint.</param>
+	/// <exception cref="ArgumentException">The <paramref name="maxAngle"/> must be bigger or equal than the <paramref name="minAngle"/>.</exception>
 	public AngledSegmentDescriptor(int segmentDistance, uint skinRadius, double minAngle, double maxAngle)
 		: this(segmentDistance, skinRadius, minAngle, maxAngle, []) { }
 

@@ -190,15 +190,15 @@ internal class Segment
 	/// Gets the front vector of the given segment.
 	/// </summary>
 	/// <param name="segment">The given segment.</param>
-	/// <exception cref="ArgumentException">If the segment has no neighbours.</exception>
 	/// <returns>The calculated vector.</returns>
+	/// <exception cref="ArgumentException">The segment must have at least one neighbour to calculate the front vector.</exception>
 	public static Point<double> GetFrontVector(Segment segment)
 	{
 		Segment? prev = segment.prevSegment;
 		Segment? next = segment.nextSegment;
 
 		if (prev is null && next is null)
-			throw new ArgumentException("Not enough segments!");
+			throw new ArgumentException("The segment must have at least one neighbour to calculate the front vector!");
 
 		prev ??= segment;
 		next ??= segment;

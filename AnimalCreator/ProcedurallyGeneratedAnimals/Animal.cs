@@ -30,6 +30,7 @@ public sealed class Animal
 	/// <param name="descriptors">The descriptors of the body of the animal.</param>
 	/// <param name="bodyColor">The color of the animals body.</param>
 	/// <param name="speed">The speed of the animal.</param>
+	/// <exception cref="ArgumentException">An animal must have at least 2 segments.</exception>
 	public Animal(Point<int> headPosition, SegmentDescriptor[] descriptors, Color bodyColor, uint speed)
 	{
 		if (descriptors.Length < 2)

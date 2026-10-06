@@ -21,6 +21,7 @@ internal class BackFin : BodyPart
 	/// <param name="render">Where to render.</param>
 	/// <param name="lengthInSegments">The number of segments the fin will go through.</param>
 	/// <param name="color">Color of the body part.</param>
+	/// <exception cref="ArgumentException">A backfin must have a length of 2 or more.</exception>
 	public BackFin(Segment segment, Render render, int lengthInSegments, Color color) : base(segment, render, color)
 	{
 		if (lengthInSegments < 2)
